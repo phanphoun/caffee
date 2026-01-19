@@ -1,6 +1,6 @@
 /**
  * =============================================================================
- * WatchStore E-Commerce Website - Main JavaScript
+ * CoffeeHouse E-Commerce Website - Main JavaScript
  * Clean, Organized, and Functional Code
  * =============================================================================
  */
@@ -12,9 +12,9 @@
 const CONFIG = {
     API_BASE_URL: '/api',
     STORAGE_KEYS: {
-        CART: 'watchstore_cart',
-        USER: 'watchstore_user',
-        WISHLIST: 'watchstore_wishlist'
+        CART: 'coffeehouse_cart',
+        USER: 'coffeehouse_user',
+        WISHLIST: 'coffeehouse_wishlist'
     },
     ANIMATION_DURATION: 300,
     TOAST_DURATION: 3000
@@ -307,42 +307,42 @@ function logout() {
  */
 const sampleProducts = [
     {
-        id: 'luxury-gold-watch',
-        title: 'Luxury Gold Watch',
-        price: 1299.99,
-        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop',
-        category: 'luxury',
+        id: 'ethiopian-single-origin',
+        title: 'Ethiopian Single Origin',
+        price: 24.99,
+        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop',
+        category: 'single-origin',
         badge: 'New',
         rating: 4.8,
         reviews: 127
     },
     {
-        id: 'smart-watch-pro',
-        title: 'Smart Watch Pro',
-        price: 399.99,
-        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=300&fit=crop',
-        category: 'smart',
-        badge: 'Sale',
+        id: 'colombian-blend',
+        title: 'Colombian Medium Blend',
+        price: 18.99,
+        image: 'https://images.unsplash.com/photo-1511920183359-35d252a30cb?w=400&h=300&fit=crop',
+        category: 'blends',
+        badge: 'Popular',
         rating: 4.6,
         reviews: 89
     },
     {
-        id: 'classic-leather',
-        title: 'Classic Leather Watch',
-        price: 599.99,
-        image: 'https://images.unsplash.com/photo-1515347619252-f638703af87e?w=400&h=300&fit=crop',
-        category: 'classic',
-        badge: 'Popular',
+        id: 'espresso-roast',
+        title: 'Italian Espresso Roast',
+        price: 22.99,
+        image: 'https://images.unsplash.com/photo-1517669198052-6d39dc066c5a?w=400&h=300&fit=crop',
+        category: 'espresso',
+        badge: 'Hot',
         rating: 4.7,
         reviews: 234
     },
     {
-        id: 'sport-digital',
-        title: 'Sport Digital Watch',
-        price: 199.99,
-        image: 'https://images.unsplash.com/photo-1542496650-6ac245b5fb4a?w=400&h=300&fit=crop',
-        category: 'sport',
-        badge: 'Hot',
+        id: 'decaf-house-blend',
+        title: 'Decaf House Blend',
+        price: 16.99,
+        image: 'https://images.unsplash.com/photo-1509042279840-560ba5c1bd93?w=400&h=300&fit=crop',
+        category: 'decaf',
+        badge: 'Sale',
         rating: 4.5,
         reviews: 156
     }
@@ -440,7 +440,7 @@ function handleNewsletterSubmit(event) {
  * Initialize application when DOM is ready
  */
 function initializeApp() {
-    console.log('🚀 WatchStore Application Initializing...');
+    console.log('🚀 CoffeeHouse Application Initializing...');
 
     // Check user session
     checkUserSession();
@@ -457,7 +457,7 @@ function initializeApp() {
     // Add animations to elements
     addScrollAnimations();
 
-    console.log('✅ WatchStore Application Ready!');
+    console.log('✅ CoffeeHouse Application Ready!');
 }
 
 /**
@@ -476,11 +476,23 @@ function setupEventListeners() {
         newsletterForm.addEventListener('submit', handleNewsletterSubmit);
     }
 
-    // Cart button (if it's not just a link to cart page)
+    // Cart button functionality
     const cartBtn = document.getElementById('cartBtn');
-    if (cartBtn && !cartBtn.hasAttribute('href')) {
-        cartBtn.addEventListener('click', () => {
-            showToast(`You have ${cart.length} items in cart`, 'info');
+    if (cartBtn) {
+        cartBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            if (cart.length === 0) {
+                showToast('Your cart is empty', 'info');
+                return;
+            }
+
+            // Toggle cart dropdown
+            const cartDropdown = document.getElementById('cartDropdown');
+            if (cartDropdown) {
+                cartDropdown.classList.toggle('active');
+                updateCartDropdown();
+            }
         });
     }
 }
@@ -509,6 +521,58 @@ function addScrollAnimations() {
     });
 }
 
+/**
+ * Update cart dropdown
+ */
+function updateCartDropdown() {
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+
+    if (!cartItems || !cartTotal) return;
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="text-center py-4">
+                <i class="bi bi-cart-x fa-2x text-muted mb-2"></i>
+                <p class="text-muted">Your cart is empty</p>
+            </div>
+        `;
+        cartTotal.textContent = '$0.00';
+    } else {
+        cartItems.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <img src="${item.image}" alt="${item.title}">
+                <div class="cart-item-info">
+                    <div class="cart-item-title">${item.title}</div>
+                    <div class="cart-item-price">${CoffeeHouse.formatCurrency(item.price)}</div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty - 1})">-</button>
+                        <span>${item.qty}</span>
+                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty + 1})">+</button>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-outline-danger" onclick="CoffeeHouse.removeFromCart('${item.id}')">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        `).join('');
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        cartTotal.textContent = CoffeeHouse.formatCurrency(total);
+
+        // Add checkout button if items exist
+        if (cart.length > 0) {
+            cartItems.innerHTML += `
+                <div class="text-center mt-3 pt-3 border-top">
+                    <a href="checkout.html" class="btn btn-primary w-100">
+                        <i class="fas fa-lock me-2"></i>Proceed to Checkout
+                    </a>
+                </div>
+            `;
+        }
+    }
+}
+
 // =============================================================================
 // START APPLICATION
 // =============================================================================
@@ -517,7 +581,7 @@ function addScrollAnimations() {
 document.addEventListener('DOMContentLoaded', initializeApp);
 
 // Export functions for global access
-window.WatchStore = {
+window.CoffeeHouse = {
     addToCart,
     removeFromCart,
     updateCartQuantity,

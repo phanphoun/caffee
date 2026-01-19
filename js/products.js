@@ -1,6 +1,6 @@
 /**
  * =============================================================================
- * Products Page JavaScript - WatchStore
+ * Products Page JavaScript - CoffeeHouse
  * Clean, Organized, and Functional Code
  * =============================================================================
  */
@@ -11,136 +11,114 @@
 
 const allProducts = [
     {
-        id: 'luxury-gold-watch',
-        title: 'Luxury Gold Watch',
-        price: 1299.99,
-        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop',
-        category: 'luxury',
+        id: 'ethiopian-single-origin',
+        title: 'Ethiopian Single Origin',
+        price: 24.99,
+        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop',
+        category: 'single-origin',
         badge: 'New',
         rating: 4.8,
         reviews: 127,
-        description: 'Exquisite gold-plated luxury watch with Swiss movement'
+        description: 'Bright, fruity notes with wine-like acidity from Ethiopian highlands'
     },
     {
-        id: 'smart-watch-pro',
-        title: 'Smart Watch Pro',
-        price: 399.99,
-        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=300&fit=crop',
-        category: 'smart',
-        badge: 'Sale',
+        id: 'colombian-blend',
+        title: 'Colombian Medium Blend',
+        price: 18.99,
+        image: 'https://images.unsplash.com/photo-1511920183359-35d252a30cb?w=400&h=300&fit=crop',
+        category: 'blends',
+        badge: 'Popular',
         rating: 4.6,
         reviews: 89,
-        description: 'Advanced smartwatch with health tracking and GPS'
+        description: 'Well-balanced medium roast with nutty and chocolate notes'
     },
     {
-        id: 'classic-leather',
-        title: 'Classic Leather Watch',
-        price: 599.99,
-        image: 'https://images.unsplash.com/photo-1515347619252-f638703af87e?w=400&h=300&fit=crop',
-        category: 'classic',
-        badge: 'Popular',
+        id: 'espresso-roast',
+        title: 'Italian Espresso Roast',
+        price: 22.99,
+        image: 'https://images.unsplash.com/photo-1517669198052-6d39dc066c5a?w=400&h=300&fit=crop',
+        category: 'espresso',
+        badge: 'Hot',
         rating: 4.7,
         reviews: 234,
-        description: 'Timeless design with genuine leather strap'
+        description: 'Dark Italian roast perfect for espresso machines'
     },
     {
-        id: 'sport-digital',
-        title: 'Sport Digital Watch',
-        price: 199.99,
-        image: 'https://images.unsplash.com/photo-1542496650-6ac245b5fb4a?w=400&h=300&fit=crop',
-        category: 'sport',
-        badge: 'Hot',
+        id: 'decaf-house-blend',
+        title: 'Decaf House Blend',
+        price: 16.99,
+        image: 'https://images.unsplash.com/photo-1509042279840-560ba5c1bd93?w=400&h=300&fit=crop',
+        category: 'decaf',
+        badge: 'Sale',
         rating: 4.5,
         reviews: 156,
-        description: 'Rugged digital watch for outdoor adventures'
+        description: 'Swiss water decaffeinated process preserves flavor'
     },
     {
-        id: 'elegant-rose',
-        title: 'Elegant Rose Gold',
-        price: 899.99,
-        image: 'https://images.unsplash.com/photo-1515372039030-ce4a3668c0ff?w=400&h=300&fit=crop',
-        category: 'luxury',
-        badge: 'Limited',
+        id: 'organic-peru',
+        title: 'Organic Peru Single Origin',
+        price: 26.99,
+        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop',
+        category: 'organic',
+        badge: 'Premium',
         rating: 4.9,
         reviews: 67,
-        description: 'Elegant rose gold timepiece with mother-of-pearl dial'
+        description: 'Certified organic with smooth, mild flavor profile'
     },
     {
-        id: 'fitness-tracker',
-        title: 'Fitness Tracker Watch',
-        price: 149.99,
-        image: 'https://images.unsplash.com/photo-1575311372332-9cfe6d3b8b8f?w=400&h=300&fit=crop',
-        category: 'smart',
-        badge: 'New',
-        rating: 4.3,
-        reviews: 198,
-        description: 'Comprehensive fitness tracking with heart rate monitor'
-    },
-    {
-        id: 'vintage-automatic',
-        title: 'Vintage Automatic',
-        price: 749.99,
-        image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=300&fit=crop',
-        category: 'classic',
-        badge: 'Rare',
+        id: 'guatemalan-antigua',
+        title: 'Guatemalan Antigua',
+        price: 21.99,
+        image: 'https://images.unsplash.com/photo-1511920183359-35d252a30cb?w=400&h=300&fit=crop',
+        category: 'single-origin',
+        badge: 'Limited',
         rating: 4.8,
         reviews: 45,
-        description: 'Vintage automatic movement with exhibition case back'
+        description: 'Volcanic soil creates rich, complex flavor with spicy notes'
     },
     {
-        id: 'diving-watch',
-        title: 'Professional Diving Watch',
-        price: 449.99,
-        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=300&fit=crop',
-        category: 'sport',
-        badge: 'Pro',
-        rating: 4.6,
-        reviews: 112,
-        description: 'Professional diving watch with 200m water resistance'
-    },
-    {
-        id: 'minimalist-design',
-        title: 'Minimalist Design Watch',
-        price: 299.99,
-        image: 'https://images.unsplash.com/photo-1515372039030-ce4a3668c0ff?w=400&h=300&fit=crop',
-        category: 'classic',
+        id: 'breakfast-blend',
+        title: 'Breakfast Blend',
+        price: 17.99,
+        image: 'https://images.unsplash.com/photo-1517669198052-6d39dc066c5a?w=400&h=300&fit=crop',
+        category: 'blends',
         badge: 'Trending',
         rating: 4.4,
         reviews: 89,
-        description: 'Clean minimalist design with Japanese movement'
+        description: 'Smooth morning blend with caramel and vanilla undertones'
     },
     {
-        id: 'smartwatch-ultra',
-        title: 'Smartwatch Ultra',
-        price: 599.99,
-        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=300&fit=crop',
-        category: 'smart',
-        badge: 'Premium',
-        rating: 4.7,
-        reviews: 143,
-        description: 'Premium smartwatch with advanced health features'
+        id: 'french-roast-dark',
+        title: 'French Roast Dark',
+        price: 19.99,
+        image: 'https://images.unsplash.com/photo-1517669198052-6d39dc066c5a?w=400&h=300&fit=crop',
+        category: 'espresso',
+        badge: 'Pro',
+        rating: 4.6,
+        reviews: 112,
+        description: 'Bold, smoky flavor perfect for French press brewing'
     },
     {
-        id: 'chronograph-sport',
-        title: 'Chronograph Sport Watch',
-        price: 349.99,
-        image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=300&fit=crop',
-        category: 'sport',
-        badge: 'Sport',
-        rating: 4.5,
+        id: 'sumatra-mandheling',
+        title: 'Sumatra Mandheling',
+        price: 23.99,
+        image: 'https://images.unsplash.com/photo-1511920183359-35d252a30cb?w=400&h=300&fit=crop',
+        category: 'single-origin',
+        badge: 'Rare',
+        rating: 4.8,
         reviews: 78,
-        description: 'Sport chronograph with tachymeter function'
+        description: 'Earthy, herbal notes with full body and low acidity'
     },
     {
-        id: 'diamond-luxury',
-        title: 'Diamond Luxury Watch',
-        price: 2499.99,
-        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop',
-        category: 'luxury',
+        id: 'house-decaf-organic',
+        title: 'House Organic Decaf',
+        price: 18.99,
+        image: 'https://images.unsplash.com/photo-1509042279840-560ba5c1bd93?w=400&h=300&fit=crop',
+        category: 'decaf',
         badge: 'Exclusive',
         rating: 5.0,
         reviews: 23,
-        description: 'Luxury watch with genuine diamond bezel'
+        description: 'Organic decaffeinated blend with bright, clean taste'
     }
 ];
 
@@ -152,7 +130,7 @@ let currentProducts = [...allProducts];
 let displayedProducts = 6;
 let currentFilter = 'all';
 let currentSort = 'featured';
-let wishlist = JSON.parse(localStorage.getItem('watchstore_wishlist')) || [];
+let wishlist = JSON.parse(localStorage.getItem('coffeehouse_wishlist')) || [];
 let currentQuickViewProduct = null;
 let searchTimeout = null;
 
@@ -212,8 +190,8 @@ function createProductCard(product) {
                         ${generateStars(product.rating)}
                         <small class="text-muted">(${product.reviews} reviews)</small>
                     </div>
-                    <div class="product-price">${WatchStore.formatCurrency(product.price)}</div>
-                    <button class="btn btn-add-cart" onclick="WatchStore.addToCart('${product.id}')">
+                    <div class="product-price">${CoffeeHouse.formatCurrency(product.price)}</div>
+                    <button class="btn btn-add-cart" onclick="CoffeeHouse.addToCart('${product.id}')">
                         <i class="fas fa-cart-plus me-2"></i>Add to Cart
                     </button>
                 </div>
@@ -395,7 +373,7 @@ function showSearchResults(query) {
                     <p>${product.description}</p>
                 </div>
                 <div class="ms-auto">
-                    <strong>${WatchStore.formatCurrency(product.price)}</strong>
+                    <strong>${CoffeeHouse.formatCurrency(product.price)}</strong>
                 </div>
             </div>
         `).join('');
@@ -452,13 +430,13 @@ function toggleWishlist(productId) {
 
     if (index > -1) {
         wishlist.splice(index, 1);
-        WatchStore.showToast(`${product.title} removed from wishlist`, 'info');
+        CoffeeHouse.showToast(`${product.title} removed from wishlist`, 'info');
     } else {
         wishlist.push(productId);
-        WatchStore.showToast(`${product.title} added to wishlist!`, 'success');
+        CoffeeHouse.showToast(`${product.title} added to wishlist!`, 'success');
     }
 
-    localStorage.setItem('watchstore_wishlist', JSON.stringify(wishlist));
+    localStorage.setItem('coffeehouse_wishlist', JSON.stringify(wishlist));
     renderProducts();
     updateQuickViewWishlist();
 }
@@ -526,13 +504,14 @@ function updateQuickViewWishlist() {
  */
 function getProductFeatures(product) {
     const features = {
-        luxury: ['Swiss Movement', 'Sapphire Crystal', 'Water Resistant', 'Premium Materials'],
-        smart: ['Heart Rate Monitor', 'GPS Tracking', 'Bluetooth Connectivity', 'Mobile App Integration'],
-        classic: ['Japanese Quartz', 'Genuine Leather Strap', 'Date Display', 'Minimalist Design'],
-        sport: ['Chronograph Function', 'Tachymeter', '200m Water Resistance', 'Shock Resistant']
+        'single-origin': ['Single Farm Origin', 'Traceable Source', 'Unique Flavor Profile', 'Direct Trade'],
+        'blends': ['Expertly Crafted Blend', 'Balanced Flavor', 'Consistent Quality', 'Versatile Brewing'],
+        'espresso': ['Dark Roast Profile', 'Rich Crema', 'Low Acidity', 'Perfect for Espresso'],
+        'decaf': ['Swiss Water Process', 'Flavor Preserved', '99.9% Caffeine Free', 'Same Great Taste'],
+        'organic': ['USDA Organic Certified', 'No Pesticides', 'Sustainably Farmed', 'Eco-Friendly']
     };
 
-    return features[product.category] || features.classic;
+    return features[product.category] || features.blends;
 }
 
 // =============================================================================
@@ -564,19 +543,19 @@ function updateCartDropdown() {
                     <div class="cart-item-title">${item.title}</div>
                     <div class="cart-item-price">${WatchStore.formatCurrency(item.price)}</div>
                     <div class="cart-item-quantity">
-                        <button class="quantity-btn" onclick="WatchStore.updateCartQuantity('${item.id}', ${item.qty - 1})">-</button>
+                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty - 1})">-</button>
                         <span>${item.qty}</span>
-                        <button class="quantity-btn" onclick="WatchStore.updateCartQuantity('${item.id}', ${item.qty + 1})">+</button>
+                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty + 1})">+</button>
                     </div>
                 </div>
-                <button class="btn btn-sm btn-outline-danger" onclick="WatchStore.removeFromCart('${item.id}')">
+                <button class="btn btn-sm btn-outline-danger" onclick="CoffeeHouse.removeFromCart('${item.id}')">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
         `).join('');
 
         const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        cartTotal.textContent = WatchStore.formatCurrency(total);
+        cartTotal.textContent = CoffeeHouse.formatCurrency(total);
     }
 }
 
@@ -610,7 +589,7 @@ function generateSkeletonCards(count) {
 function compareProduct(productId) {
     // This is a placeholder for comparison functionality
     const product = allProducts.find(p => p.id === productId);
-    WatchStore.showToast(`Comparison feature coming soon for ${product.title}`, 'info');
+    CoffeeHouse.showToast(`Comparison feature coming soon for ${product.title}`, 'info');
 }
 
 // =============================================================================
