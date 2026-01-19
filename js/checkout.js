@@ -62,6 +62,10 @@ function loadCartItems() {
                 <img src="${item.image}" alt="${item.title}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" class="me-3">
                 <div class="flex-grow-1">
                     <h6 class="mb-1">${item.title}</h6>
+                    ${item.description ? `<div class="text-muted small mb-1">${item.description}</div>` : ''}
+                    ${item.options && item.options.notes ? `<div class="text-muted small mb-1">Note: ${item.options.notes}</div>` : ''}
+                    ${item.options && item.options.grind ? `<div class="text-muted small mb-1">Grind: ${item.options.grind}</div>` : ''}
+                    ${item.options && item.options.size ? `<div class="text-muted small mb-1">Size: ${item.options.size}</div>` : ''}
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="text-muted">Quantity: ${item.qty}</span>
                         <span class="fw-bold">${CoffeeHouse.formatCurrency(item.price)}</span>
@@ -224,7 +228,7 @@ function processOrder(orderData) {
         localStorage.setItem('coffeehouse_orders', JSON.stringify(orders));
 
         // Clear cart
-        localStorage.removeItem('coffeehouse_cart');
+        CoffeeHouse.clearCart();
 
         // Show success message
         CoffeeHouse.showToast('Order placed successfully! Order ID: ' + orderId, 'success');

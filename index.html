@@ -72,6 +72,22 @@
                         <span class="badge bg-danger position-absolute top-0 start-100 translate-middle"
                             id="cartCount">0</span>
                     </button>
+                    <!-- Cart Dropdown -->
+                    <div class="cart-dropdown" id="cartDropdown">
+                        <div class="cart-dropdown-header">
+                            <i class="ri-shopping-cart-line me-2"></i>Shopping Cart
+                        </div>
+                        <div id="cartItems"></div>
+                        <div class="cart-dropdown-footer">
+                            <div class="cart-total">
+                                <span>Total:</span>
+                                <span id="cartTotal">$0.00</span>
+                            </div>
+                            <button class="cart-checkout-btn" onclick="window.location.href='checkout.html'">
+                                Proceed to Checkout
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

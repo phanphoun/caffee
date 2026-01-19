@@ -122,6 +122,9 @@ const allProducts = [
     }
 ];
 
+// Make product data available globally so other modules can use canonical values
+window.allProducts = allProducts;
+
 // =============================================================================
 // APPLICATION STATE
 // =============================================================================
@@ -151,6 +154,22 @@ const cartBtn = document.getElementById('cartBtn');
 // =============================================================================
 // PRODUCT RENDERING
 // =============================================================================
+
+/**
+ * Product options
+ */
+const GRIND_OPTIONS = [
+    { value: 'whole-bean', label: 'Whole Bean' },
+    { value: 'coarse', label: 'Coarse' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'fine', label: 'Fine' }
+];
+
+const SIZE_OPTIONS = [
+    { value: '250g', label: '250g' },
+    { value: '500g', label: '500g' },
+    { value: '1kg', label: '1kg' }
+];
 
 /**
  * Create product card HTML
@@ -191,7 +210,7 @@ function createProductCard(product) {
                         <small class="text-muted">(${product.reviews} reviews)</small>
                     </div>
                     <div class="product-price">${CoffeeHouse.formatCurrency(product.price)}</div>
-                    <button class="btn btn-add-cart" onclick="CoffeeHouse.addToCart('${product.id}')">
+                    <button class="btn btn-add-cart" onclick="addToCartDirect('${product.id}', this)">
                         <i class="fas fa-cart-plus me-2"></i>Add to Cart
                     </button>
                 </div>
@@ -459,11 +478,28 @@ function showQuickView(productId) {
     document.getElementById('quickViewImage').alt = product.title;
     document.getElementById('quickViewTitle').textContent = product.title;
     document.getElementById('quickViewDescription').textContent = product.description;
-    document.getElementById('quickViewPrice').textContent = WatchStore.formatCurrency(product.price);
+    document.getElementById('quickViewPrice').textContent = CoffeeHouse.formatCurrency(product.price);
     document.getElementById('quickViewRating').innerHTML = `
         ${generateStars(product.rating)}
         <small class="text-muted">(${product.reviews} reviews)</small>
     `;
+
+    // Initialize quick view inputs
+    const qtyInput = document.getElementById('quickViewQuantity');
+    const notesInput = document.getElementById('quickViewNotes');
+    const grindSelect = document.getElementById('quickViewGrind');
+    const sizeSelect = document.getElementById('quickViewSize');
+
+    if (qtyInput) qtyInput.value = 1;
+    if (notesInput) notesInput.value = '';
+
+    if (grindSelect) {
+        grindSelect.innerHTML = GRIND_OPTIONS.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+    }
+
+    if (sizeSelect) {
+        sizeSelect.innerHTML = SIZE_OPTIONS.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+    }
 
     // Update features
     const features = getProductFeatures(product);
@@ -519,43 +555,11 @@ function getProductFeatures(product) {
 // =============================================================================
 
 /**
- * Update cart dropdown
+ * Update cart dropdown (delegates to central implementation)
  */
 function updateCartDropdown() {
-    const cartItems = document.getElementById('cartItems');
-    const cartTotal = document.getElementById('cartTotal');
-
-    if (!cartItems || !cartTotal) return;
-
-    if (cart.length === 0) {
-        cartItems.innerHTML = `
-            <div class="text-center py-4">
-                <i class="bi bi-cart-x fa-2x text-muted mb-2"></i>
-                <p class="text-muted">Your cart is empty</p>
-            </div>
-        `;
-        cartTotal.textContent = '$0.00';
-    } else {
-        cartItems.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <img src="${item.image}" alt="${item.title}">
-                <div class="cart-item-info">
-                    <div class="cart-item-title">${item.title}</div>
-                    <div class="cart-item-price">${WatchStore.formatCurrency(item.price)}</div>
-                    <div class="cart-item-quantity">
-                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty - 1})">-</button>
-                        <span>${item.qty}</span>
-                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty + 1})">+</button>
-                    </div>
-                </div>
-                <button class="btn btn-sm btn-outline-danger" onclick="CoffeeHouse.removeFromCart('${item.id}')">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        `).join('');
-
-        const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        cartTotal.textContent = CoffeeHouse.formatCurrency(total);
+    if (window.CoffeeHouse && typeof window.CoffeeHouse.updateCartDropdown === 'function') {
+        window.CoffeeHouse.updateCartDropdown();
     }
 }
 
@@ -592,9 +596,9 @@ function compareProduct(productId) {
     CoffeeHouse.showToast(`Comparison feature coming soon for ${product.title}`, 'info');
 }
 
-// =============================================================================
+// 
 // EVENT LISTENERS
-// =============================================================================
+// 
 
 /**
  * Setup all event listeners
@@ -672,26 +676,10 @@ function setupEventListeners() {
         });
     }
 
-    // Cart dropdown toggle
-    if (cartBtn && cartDropdown) {
-        cartBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            cartDropdown.classList.toggle('active');
-            updateCartDropdown();
-        });
-
-        // Close cart dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('#cartBtn') && !e.target.closest('#cartDropdown')) {
-                cartDropdown.classList.remove('active');
-            }
-        });
-    }
+    // Cart dropdown toggle is handled in main.js to keep cart interactions centralized
 }
 
-// =============================================================================
 // INITIALIZATION
-// =============================================================================
 
 /**
  * Initialize products page
@@ -722,9 +710,80 @@ function initializeProductsPage() {
     console.log('✅ Products Page Ready!');
 }
 
-// =============================================================================
+
 // START APPLICATION
-// =============================================================================
+
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', initializeProductsPage);
+
+/**
+ * Add product to cart directly from the product card (fast add)
+ */
+function addToCartDirect(productId, btn) {
+    // Use central addToCart
+    if (window.CoffeeHouse && typeof window.CoffeeHouse.addToCart === 'function') {
+        window.CoffeeHouse.addToCart(productId, 1, {});
+    }
+
+    // Button feedback animation
+    let button = btn;
+    if (!button) {
+        button = document.querySelector(`[data-product-id="${productId}"] .btn-add-cart`);
+    }
+
+    if (button) {
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check me-2"></i>Added!';
+        button.disabled = true;
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+        }, 900);
+    }
+
+    // Open cart dropdown and show latest data
+    const cartDropdown = document.getElementById('cartDropdown');
+    if (cartDropdown) {
+        cartDropdown.classList.add('active');
+        if (window.CoffeeHouse && typeof window.CoffeeHouse.updateCartDropdown === 'function') {
+            window.CoffeeHouse.updateCartDropdown();
+        }
+
+        // Close it after a short delay so it doesn't stay open forever
+        setTimeout(() => {
+            cartDropdown.classList.remove('active');
+        }, 2500);
+    }
+}
+
+/**
+ * Add product to cart from Quick View
+ */
+function addToCartFromQuickView() {
+    const qtyEl = document.getElementById('quickViewQuantity');
+    const notesEl = document.getElementById('quickViewNotes');
+    const grindEl = document.getElementById('quickViewGrind');
+    const sizeEl = document.getElementById('quickViewSize');
+
+    const qty = qtyEl ? parseInt(qtyEl.value, 10) || 1 : 1;
+    const notes = notesEl ? notesEl.value.trim() : '';
+    const grind = grindEl ? grindEl.value : GRIND_OPTIONS[0].value;
+    const size = sizeEl ? sizeEl.value : SIZE_OPTIONS[0].value;
+
+    if (!currentQuickViewProduct) return;
+
+    if (window.CoffeeHouse && typeof window.CoffeeHouse.addToCart === 'function') {
+        window.CoffeeHouse.addToCart(currentQuickViewProduct, qty, { notes, grind, size });
+        closeQuickView();
+
+        const cartDropdown = document.getElementById('cartDropdown');
+        if (cartDropdown) {
+            cartDropdown.classList.add('active');
+            if (window.CoffeeHouse && typeof window.CoffeeHouse.updateCartDropdown === 'function') {
+                window.CoffeeHouse.updateCartDropdown();
+            }
+            setTimeout(() => cartDropdown.classList.remove('active'), 2500);
+        }
+    }
+}

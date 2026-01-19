@@ -196,9 +196,30 @@
                         <div class="quick-view-price mb-4">
                             <span id="quickViewPrice" class="h3 text-primary fw-bold"></span>
                         </div>
+                        <div class="d-flex gap-3 mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="quickViewQuantity" class="mb-0">Qty</label>
+                                <input id="quickViewQuantity" type="number" min="1" value="1" class="form-control"
+                                    style="width:80px;">
+                            </div>
+                            <div class="flex-grow-1">
+                                <input id="quickViewNotes" type="text" class="form-control"
+                                    placeholder="Add a note (optional)">
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="quickViewGrind" class="mb-0">Grind</label>
+                                <select id="quickViewGrind" class="form-select" style="width:140px;"></select>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <label for="quickViewSize" class="mb-0">Size</label>
+                                <select id="quickViewSize" class="form-select" style="width:120px;"></select>
+                            </div>
+                        </div>
                         <div class="d-flex gap-3 mb-4">
-                            <button class="btn btn-primary btn-lg flex-fill"
-                                onclick="addToCart(currentQuickViewProduct)">
+                            <button class="btn btn-primary btn-lg flex-fill btn-add-cart"
+                                onclick="addToCartFromQuickView()">
                                 <i class="bi bi-cart-plus me-2"></i>Add to Cart
                             </button>
                             <button class="btn btn-outline-danger btn-lg"

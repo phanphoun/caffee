@@ -73,6 +73,10 @@ function displayOrderInformation(order) {
                 <img src="${item.image}" alt="${item.title}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;" class="me-3">
                 <div class="flex-grow-1">
                     <h6 class="mb-1">${item.title}</h6>
+                    ${item.description ? `<div class="text-muted small mb-1">${item.description}</div>` : ''}
+                    ${item.options && item.options.notes ? `<div class="text-muted small mb-1">Note: ${item.options.notes}</div>` : ''}
+                    ${item.options && item.options.grind ? `<div class="text-muted small mb-1">Grind: ${item.options.grind}</div>` : ''}
+                    ${item.options && item.options.size ? `<div class="text-muted small mb-1">Size: ${item.options.size}</div>` : ''}
                     <div class="d-flex justify-content-between">
                         <span class="text-muted">Quantity: ${item.qty}</span>
                         <span>${CoffeeHouse.formatCurrency(item.price)}</span>
@@ -107,10 +111,6 @@ function displayOrderInformation(order) {
     // Update page title
     document.title = `Order #${order.orderId} - CoffeeHouse`;
 }
-
-// =============================================================================
-// START APPLICATION
-// =============================================================================
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', initializeOrderConfirmation);
