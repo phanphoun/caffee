@@ -1,27 +1,27 @@
 /* =============================================================================
-   WatchStore E-Commerce Website Stylesheet
-   Clean, Modern, and Professional Design
+   CoffeeHouse E-Commerce Website Stylesheet
+   Warm, Inviting, and Professional Design
    ============================================================================= */
 
-/* CSS Variables for Consistent Theming */
+/* CSS Variables for Consistent Coffee Theming */
 :root {
-    --primary-color: #007bff;
-    --secondary-color: #6c757d;
+    --primary-color: #6F4E37;
+    --secondary-color: #8B6F47;
     --success-color: #28a745;
     --danger-color: #dc3545;
-    --warning-color: #ffc107;
+    --warning-color: #D2691E;
     --info-color: #17a2b8;
-    --light-color: #f8f9fa;
-    --dark-color: #343a40;
-    --accent-color: #ffd700;
+    --light-color: #FFF8DC;
+    --dark-color: #3E2723;
+    --accent-color: #D2691E;
 
-    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    --gradient-primary: linear-gradient(135deg, #6F4E37 0%, #8B6F47 100%);
+    --gradient-dark: linear-gradient(135deg, #3E2723 0%, #5D4037 100%);
 
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
-    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
+    --shadow-sm: 0 2px 4px rgba(111, 78, 55, 0.1);
+    --shadow-md: 0 4px 8px rgba(111, 78, 55, 0.15);
+    --shadow-lg: 0 8px 16px rgba(111, 78, 55, 0.2);
+    --shadow-xl: 0 12px 24px rgba(111, 78, 55, 0.25);
 
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -106,7 +106,7 @@ html {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1920&h=1080&fit=crop') center/cover;
+    background: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1920&h=1080&fit=crop') center/cover;
     opacity: 0.1;
     z-index: 0;
 }
