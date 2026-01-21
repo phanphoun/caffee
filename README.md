@@ -1,200 +1,392 @@
-# WatchStore E-Commerce Website
+# CoffeeHouse - Premium Coffee E-Commerce Platform
 
-A modern, clean, and fully functional e-commerce website for selling premium watches with exceptional UX/UI.
+☕ A modern, fully functional e-commerce website for premium coffee beans with an exceptional shopping experience, user profiles, and complete checkout system.
 
 ## 🚀 Features
 
-### **Core Functionality**
-- **Product Catalog**: Browse and filter premium watches
-- **Shopping Cart**: Add/remove items with animated feedback
-- **User Authentication**: Login, register, and session management
-- **Search & Filtering**: Advanced product search and category filtering
-- **Contact System**: Contact form and FAQ section
-- **Responsive Design**: Works perfectly on all devices
+### **Core E-Commerce Functionality**
+- ✅ **Product Catalog**: Browse premium coffee beans with detailed descriptions
+- ✅ **Shopping Cart**: Add/remove items, adjust quantities with real-time updates
+- ✅ **Cart Dropdown**: Quick cart view with subtotals on any page
+- ✅ **Checkout System**: Complete checkout flow with shipping and payment info
+- ✅ **Promo Codes**: Apply discount codes (WELCOME10, COFFEE15, SAVE20)
+- ✅ **Order Confirmation**: Beautiful order confirmation page with order details
+- ✅ **User Profiles**: Users can view and edit their profile information
+- ✅ **User Authentication**: Login, register, and session management
+- ✅ **Responsive Design**: Perfect experience on all devices (mobile, tablet, desktop)
 
-### **Enhanced UX/UI**
-- **Toast Notifications**: Modern, non-intrusive feedback system
+### **Shopping System**
+- **Cart Management**: Persistent shopping cart with localStorage
+- **Real-time Calculations**: Automatic subtotal, tax, and total calculation
+- **Discount System**: Multiple promo codes with percentage-based discounts
+- **Shipping Cost**: Fixed $5.99 shipping (configurable)
+- **Tax Calculation**: 8% tax rate applied after discounts
+- **Order History**: Orders saved to localStorage for review
+
+### **User Experience**
+- **Toast Notifications**: Modern feedback for all user actions
 - **Smooth Animations**: Professional transitions and micro-interactions
-- **Visual Feedback**: Button states, loading indicators, success/error messages
-- **Modern Design**: Clean, professional interface with gradient accents
-- **Accessibility**: Semantic HTML5 with proper ARIA labels
+- **Form Validation**: Real-time email and phone validation
+- **Modal Dialogs**: Beautiful profile modal with form controls
+- **Visual Feedback**: Button states, loading indicators, success messages
+- **Mobile Optimized**: Responsive navigation and layouts
 
-### **Technical Excellence**
-- **Clean Code**: Well-organized, commented, and maintainable JavaScript
-- **Modular Architecture**: Separated concerns with utility functions
+### **Technical Features**
+- **Local Storage**: Persistent cart, user data, and order history
+- **Clean Code**: Well-organized, documented, modular JavaScript
 - **Error Handling**: Graceful error management with user feedback
-- **Local Storage**: Persistent cart and user session management
 - **Performance**: Optimized animations and efficient DOM manipulation
+- **Accessibility**: Semantic HTML5 with ARIA labels
 
 ## 📁 Project Structure
 
 ```
-A5-Ecomerce-wachify/
-├── index.html              # Homepage with hero section
-├── products.html           # Product catalog with filtering
-├── login.html              # User authentication
-├── register.html           # User registration
-├── about.html              # About page
-├── contact.html            # Contact page with FAQ
+CoffeeHouse/
+├── index.html                    # Homepage with hero section
+├── products.html                 # Product catalog and browsing
+├── checkout.html                 # Complete checkout page
+├── order-confirmation.html       # Order confirmation page
+├── about.html                    # About CoffeeHouse
+├── contact.html                  # Contact page
+├── login.html                    # User login
+├── register.html                 # User registration
+├── README.md                     # This file
+├── QUICK_START.md                # Quick start guide
+├── SHOPPING_SYSTEM.md            # Shopping system documentation
+├── PROFILE_FEATURE.md            # Profile feature guide
+├── API_REFERENCE.md              # JavaScript API reference
 ├── css/
-│   └── style.css           # Main stylesheet with modern design
-├── js/
-│   ├── main.js            # Core functionality and utilities
-│   ├── products.js        # Product page specific logic
-│   └── auth.js            # Authentication system
-│   └── contact.js          # Contact page functionality
-└── img/                  # Product images and assets
+│   └── style.css                 # Main stylesheet (900+ lines)
+└── js/
+    ├── main.js                   # Core cart & app functionality
+    ├── products.js               # Product page logic
+    ├── checkout.js               # Checkout & order processing
+    ├── auth.js                   # Authentication system
+    ├── contact.js                # Contact form handling
+    └── profile.js                # User profile management
 ```
 
 ## 🛠️ Technologies Used
 
-- **HTML5**: Semantic markup with accessibility in mind
-- **CSS3**: Modern features including CSS variables and animations
+- **HTML5**: Semantic markup with proper structure
+- **CSS3**: Modern features (variables, animations, gradients, flexbox, grid)
 - **JavaScript ES6+**: Clean, modular code with modern practices
-- **Bootstrap 5**: Responsive framework for consistent design
-- **Font Awesome**: Icon library for visual elements
-- **LocalStorage**: Client-side data persistence
+- **Bootstrap 5.3.0**: Responsive framework for consistent design
+- **Font Awesome 6.0.0**: Icon library for visual elements
+- **Remix Icon 4.8.0**: Additional icon set
+- **LocalStorage API**: Client-side data persistence
 
 ## 🎨 Design System
 
-### **Color Palette**
-- **Primary**: Blue gradient (#667eea → #764ba2)
-- **Accent**: Gold (#ffd700)
-- **Success**: Green (#28a745)
-- **Warning**: Orange (#ffc107)
-- **Danger**: Red (#dc3545)
+### **Color Palette** (Coffee Theme)
+- **Primary**: #6F4E37 (Coffee Brown)
+- **Secondary**: #8B6F47 (Tan/Beige)
+- **Light**: #FFF8DC (Cream)
+- **Dark**: #3E2723 (Dark Brown)
+- **Accent**: #D2691E (Chocolate)
+- **Success**: #28a745 (Green)
+- **Danger**: #dc3545 (Red)
 
 ### **Typography**
-- **Primary Font**: Segoe UI (system fallback)
+- **Font Family**: Segoe UI, Tahoma, Geneva, Verdana (system fonts)
 - **Headings**: Bold weights with clear hierarchy
-- **Body Text**: Optimized for readability
+- **Body Text**: 16px for optimal readability
 
 ### **Animations**
-- **Smooth Transitions**: 0.3s cubic-bezier easing
-- **Micro-interactions**: Hover states, button feedback
-- **Page Transitions**: Fade-in animations for content
-- **Loading States**: Professional skeleton loaders
+- **Modal**: Slide-up animation on open, fade-in background
+- **Buttons**: Scale and shadow effects on hover
+- **Cart**: Badge bounce animation on updates
+- **Transitions**: 0.3s cubic-bezier easing for smooth interactions
 
 ## 🚀 Getting Started
 
-1. **Clone or Download** the project files
-2. **Open `index.html`** in your browser
-3. **Start Shopping**: Browse products, add to cart, and enjoy the experience!
+### **Installation**
+1. Clone the repository: `git clone https://github.com/phanphoun/caffee.git`
+2. Navigate to project: `cd caffee`
+3. Open `index.html` in your browser
+
+### **Quick Test**
+1. Browse to **Products** page
+2. Click "Add to Cart" on any product
+3. Click cart icon to view cart
+4. Proceed to checkout
+5. Enter shipping info and apply promo code
+6. Complete order to see confirmation
+
+### **Test Credentials**
+- Any email and password can be used for testing
+- User data is stored in localStorage
 
 ## 📱 Pages Overview
 
 ### **Homepage (index.html)**
-- Hero section with call-to-action
+- Hero section with featured coffee image
+- Call-to-action buttons
 - Featured products showcase
-- Company features and benefits
+- Company benefits section
 - Newsletter subscription
 
 ### **Products Page (products.html)**
-- Advanced filtering system
-- Search functionality
-- Sort options (price, rating, name)
-- Load more pagination
-- Product cards with ratings and reviews
+- Product grid with images and pricing
+- "Add to Cart" buttons
+- Product filtering options
+- Price display with ratings
+- Real-time cart updates
+
+### **Checkout Page (checkout.html)**
+- Shipping information form (name, email, address, etc.)
+- Payment method selection (3 options)
+- Promo code input field
+- Order summary with breakdown:
+  - Subtotal
+  - Discount (if promo applied)
+  - Shipping ($5.99)
+  - Tax (8%)
+  - **Total**
+- Place Order button
+
+### **Order Confirmation (order-confirmation.html)**
+- Success animation with checkmark
+- Order ID and confirmation details
+- Order items list with quantities
+- 4-step "Next Steps" guidance
+- Action buttons (Continue Shopping, Home)
+- Contact information
+
+### **User Profile Modal**
+- Accessible from Account dropdown on any page
+- Edit fields: Name, Username, Email, Phone, Bio
+- Real-time validation
+- Save changes to localStorage
+- Navbar automatically updates
 
 ### **Authentication (login.html & register.html)**
-- Modern, gradient-based design
+- Modern, clean design
 - Form validation with feedback
-- Password strength indicators
-- Remember me functionality
+- Session management
+- Remember user between visits
 
 ### **About Page (about.html)**
-- Company story and values
-- Team member profiles
+- Company story
+- Mission and values
 - Company statistics
-- Professional photography
+- Professional presentation
 
 ### **Contact Page (contact.html)**
-- Contact information cards
-- Interactive contact form
-- FAQ accordion
+- Contact information
+- Contact form
+- FAQ section
 - Newsletter subscription
+
+## 🛒 Shopping System Details
+
+### **Cart Operations**
+```javascript
+// Add to cart
+CoffeeHouse.addToCart(productId, quantity);
+
+// Remove from cart
+CoffeeHouse.removeFromCart(productId);
+
+// Update quantity
+CoffeeHouse.updateCartQuantity(productId, newQuantity);
+
+// Get cart total
+const total = CoffeeHouse.getCartTotal();
+```
+
+### **Promo Codes**
+Built-in test codes:
+- `WELCOME10` - 10% discount
+- `COFFEE15` - 15% discount
+- `SAVE20` - 20% discount
+
+### **Data Structure: Order**
+```javascript
+{
+    orderId: 'COF1234567890',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    phone: '(555) 123-4567',
+    address: '123 Main Street',
+    city: 'New York',
+    zipCode: '10001',
+    country: 'US',
+    paymentMethod: 'credit-card',
+    cart: [...items],
+    subtotal: '$100.00',
+    discount: '$10.00',
+    shipping: '$5.99',
+    tax: '$7.60',
+    total: '$103.59',
+    orderDate: '2026-01-21T10:30:00Z',
+    status: 'confirmed'
+}
+```
 
 ## 🔧 Customization
 
-### **Adding New Products**
-Edit `js/products.js` and add to the `allProducts` array:
+### **Add New Products**
+Edit `js/products.js` and add to the product array:
 
 ```javascript
 {
     id: 'unique-product-id',
-    title: 'Product Name',
-    price: 999.99,
-    image: 'image-url',
-    category: 'category',
+    title: 'Ethiopian Single Origin',
+    price: 24.99,
+    image: 'https://image-url.jpg',
+    category: 'single-origin',
     badge: 'New',
-    rating: 4.5,
-    reviews: 100,
-    description: 'Product description'
+    rating: 4.8,
+    reviews: 127
 }
 ```
 
-### **Modifying Colors**
-Update CSS variables in `css/style.css`:
+### **Change Promo Codes**
+Edit `js/checkout.js`:
+
+```javascript
+const PROMO_CODES = {
+    'WELCOME10': 0.10,   // 10% discount
+    'COFFEE15': 0.15,    // 15% discount
+    'SAVE20': 0.20       // 20% discount
+};
+```
+
+### **Modify Pricing**
+In `js/checkout.js`:
+
+```javascript
+let shippingCost = 5.99;     // Change shipping
+let taxRate = 0.08;          // Change tax rate (8%)
+```
+
+### **Update Colors**
+Edit CSS variables in `css/style.css`:
 
 ```css
 :root {
-    --primary-color: #your-color;
-    --accent-color: #your-accent-color;
-    /* ... */
+    --primary-color: #6F4E37;     /* Coffee brown */
+    --secondary-color: #8B6F47;   /* Tan */
+    --light-color: #FFF8DC;       /* Cream */
+    /* ... more variables ... */
 }
 ```
 
-### **Adding New Pages**
-1. Create new HTML file in root directory
-2. Use the existing navigation structure
-3. Link to `css/style.css` and `js/main.js`
-5. Add page-specific JavaScript if needed
+## 📊 localStorage Schema
 
-## 🔐 Security Features
+```javascript
+// Shopping Cart
+localStorage.coffeehouse_cart = JSON.stringify([
+    { id: '1', title: 'Product', price: 24.99, image: 'url', qty: 2 }
+]);
 
-- **Input Validation**: Client-side validation for all forms
-- **XSS Protection**: Safe HTML rendering
-- **CSRF Protection**: Form token validation (ready for backend)
-- **Data Encryption**: Secure password handling (ready for backend)
+// User Data
+localStorage.coffeehouse_user = JSON.stringify({
+    name: 'John Doe',
+    username: 'johndoe',
+    email: 'john@example.com',
+    phone: '(555) 123-4567',
+    bio: 'Coffee lover',
+    updatedAt: '2026-01-21T10:30:00Z'
+});
+
+// Order History
+localStorage.coffeehouse_orders = JSON.stringify([
+    { orderId: 'COF...', ...orderData }
+]);
+```
+
+## 🔐 Security Notes
+
+⚠️ **Current Implementation**: Uses localStorage for demonstration/MVP purposes.
+
+**For Production**, implement:
+- [ ] Backend API with Node.js/Express
+- [ ] Secure user authentication with JWT tokens
+- [ ] Real payment gateway integration (Stripe, PayPal)
+- [ ] HTTPS encryption
+- [ ] Server-side validation
+- [ ] Password hashing and salting
+- [ ] CORS security headers
+- [ ] Rate limiting
+- [ ] SQL injection prevention
+- [ ] XSS protection
 
 ## 📱 Browser Compatibility
 
-- **Chrome**: 60+ (full support)
-- **Firefox**: 55+ (full support)
-- **Safari**: 12+ (full support)
-- **Edge**: 79+ (full support)
-- **Mobile**: Full responsive support
+- ✅ **Chrome**: 90+ (full support)
+- ✅ **Firefox**: 88+ (full support)
+- ✅ **Safari**: 14+ (full support)
+- ✅ **Edge**: 90+ (full support)
+- ✅ **Mobile**: iOS Safari 12+, Chrome Android
+- ✅ **Tablets**: Full responsive support
 
 ## 🚀 Performance Optimizations
 
-- **Lazy Loading**: Images load as needed
-- **Debounced Events**: Efficient search and filtering
-- **Optimized Animations**: GPU-accelerated CSS transitions
+- **Lazy Loading**: Images load efficiently
+- **Debounced Events**: Optimized search and filtering
+- **CSS Animations**: GPU-accelerated transitions
 - **Local Storage**: Fast data persistence
-- **Minified Assets**: Production-ready optimization
+- **Event Delegation**: Efficient event handling
+- **Minified Assets**: Production-ready code
 
-## 🛠️ Maintenance
+## 📚 Documentation
 
-### **Regular Updates**
-- Update product catalog
-- Review and optimize performance
-- Security updates and patches
-- Content refresh and improvements
+Additional documentation files included:
 
-### **Code Quality**
-- Follows JavaScript best practices
-- Consistent code formatting
-- Proper error handling
-- Comprehensive documentation
+| File | Purpose |
+|------|---------|
+| `QUICK_START.md` | Quick reference and testing guide |
+| `SHOPPING_SYSTEM.md` | Complete shopping system documentation |
+| `PROFILE_FEATURE.md` | User profile feature guide |
+| `API_REFERENCE.md` | JavaScript API and function reference |
 
-## 📞 Support
+## 🛠️ Future Enhancements
 
-For questions, issues, or feature requests, please:
+Potential improvements for production:
 
-1. Check the documentation in this README
-2. Review the code comments for implementation details
-3. Test thoroughly in multiple browsers
-4. Report issues with specific steps to reproduce
+- [ ] Real payment gateway integration
+- [ ] Email notifications for orders
+- [ ] Order tracking system
+- [ ] User accounts with login persistence
+- [ ] Wishlist/save for later
+- [ ] Product reviews and ratings
+- [ ] Advanced filtering and search
+- [ ] Abandoned cart recovery
+- [ ] Admin dashboard
+- [ ] Analytics and reporting
+- [ ] Shipping rate calculation
+- [ ] Inventory management
+- [ ] Two-factor authentication
+- [ ] Social media integration
+
+## 🐛 Troubleshooting
+
+### **Cart not showing items**
+- Check browser console (F12)
+- Verify localStorage is enabled
+- Clear cache and reload
+
+### **Profile modal not opening**
+- Ensure user is logged in (currentUser exists)
+- Check profile.js is loaded
+- Try refresh page
+
+### **Promo codes not working**
+- Verify code is spelled correctly
+- Check code exists in PROMO_CODES object
+- Ensure subtotal is greater than $0
+
+## 📞 Support & Contact
+
+For questions or issues:
+
+1. Check the documentation files
+2. Review code comments
+3. Inspect browser console for errors
+4. Test in multiple browsers
 
 ## 📄 License
 
@@ -202,4 +394,8 @@ This project is open source and available under the MIT License.
 
 ---
 
-**WatchStore** - Where Time Meets Technology 🕐⚡
+**CoffeeHouse** - Premium Coffee Beans Delivered 🚀☕
+
+*Last Updated: January 21, 2026*
+*Version: 1.0.0*
+
