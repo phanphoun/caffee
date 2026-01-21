@@ -1,13 +1,13 @@
 /**
- * =============================================================================
+ * ============================================================================
  * Products Page JavaScript - CoffeeHouse
- * Clean, Organized, and Functional Code
- * =============================================================================
+ * Handles product display, filtering, sorting, and user interactions
+ * ============================================================================
  */
 
-// =============================================================================
-// PRODUCT DATA
-// =============================================================================
+// ============================================================================
+// PRODUCT DATA - All available products
+// ============================================================================
 
 const allProducts = [
     {
@@ -122,9 +122,9 @@ const allProducts = [
     }
 ];
 
-// =============================================================================
-// APPLICATION STATE
-// =============================================================================
+// ============================================================================
+// APPLICATION STATE & VARIABLES
+// ============================================================================
 
 let currentProducts = [...allProducts];
 let displayedProducts = 6;
@@ -134,9 +134,9 @@ let wishlist = JSON.parse(localStorage.getItem('coffeehouse_wishlist')) || [];
 let currentQuickViewProduct = null;
 let searchTimeout = null;
 
-// =============================================================================
-// DOM ELEMENTS
-// =============================================================================
+// ============================================================================
+// DOM ELEMENT REFERENCES
+// ============================================================================
 
 const productsGrid = document.getElementById('productsGrid');
 const searchInput = document.getElementById('searchInput');
@@ -148,12 +148,15 @@ const filterButtons = document.querySelectorAll('[data-filter]');
 const cartDropdown = document.getElementById('cartDropdown');
 const cartBtn = document.getElementById('cartBtn');
 
-// =============================================================================
-// PRODUCT RENDERING
-// =============================================================================
+// ============================================================================
+// PRODUCT RENDERING FUNCTIONS
+// ============================================================================
 
 /**
- * Create product card HTML
+ * Create product card HTML from product object
+ * Includes product image, badge, price, and action buttons
+ * @param {Object} product - Product data object
+ * @returns {string} HTML string for the product card
  */
 function createProductCard(product) {
     const isInWishlist = wishlist.includes(product.id);
@@ -201,7 +204,10 @@ function createProductCard(product) {
 }
 
 /**
- * Generate star rating HTML
+ * Generate HTML for star rating display
+ * Shows full, half, and empty stars based on rating
+ * @param {number} rating - Rating value (0-5)
+ * @returns {string} HTML string with star icons
  */
 function generateStars(rating) {
     const fullStars = Math.floor(rating);
@@ -227,7 +233,9 @@ function generateStars(rating) {
 
 
 /**
- * Render products to the grid with loading states
+ * Render products to the grid with optional loading state
+ * Shows skeleton cards during loading, then displays actual products
+ * @param {boolean} loading - Show loading skeleton state
  */
 function renderProducts(loading = false) {
     if (!productsGrid) return;
@@ -262,12 +270,14 @@ function renderProducts(loading = false) {
     }, 100);
 }
 
-// =============================================================================
-// FILTERING AND SORTING
-// =============================================================================
+// ============================================================================
+// FILTERING & SORTING FUNCTIONS
+// ============================================================================
 
 /**
  * Filter products by category
+ * Updates current products and applies current sort option
+ * @param {string} category - Category to filter by (or 'all')
  */
 function filterProducts(category) {
     currentFilter = category;
@@ -292,7 +302,9 @@ function filterProducts(category) {
 }
 
 /**
- * Sort products
+ * Sort products based on specified criteria
+ * Supports: featured, price-low, price-high, name, rating
+ * @param {string} sortBy - Sort option (default: 'featured')
  */
 function sortProducts(sortBy) {
     currentSort = sortBy;

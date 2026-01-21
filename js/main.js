@@ -1,13 +1,13 @@
 /**
- * =============================================================================
+ * ============================================================================
  * CoffeeHouse E-Commerce Website - Main JavaScript
- * Clean, Organized, and Functional Code
- * =============================================================================
+ * Handles cart management, user authentication, and general functionality
+ * ============================================================================
  */
 
-// =============================================================================
-// GLOBAL VARIABLES AND CONFIGURATION
-// =============================================================================
+// ============================================================================
+// GLOBAL CONFIGURATION
+// ============================================================================
 
 const CONFIG = {
     API_BASE_URL: '/api',
@@ -20,16 +20,21 @@ const CONFIG = {
     TOAST_DURATION: 3000
 };
 
-// Application state
+// ============================================================================
+// APPLICATION STATE (Loaded from localStorage)
+// ============================================================================
+
 let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.CART)) || [];
 let currentUser = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER)) || null;
 
-// =============================================================================
-// UTILITY FUNCTIONS
-// =============================================================================
+// ============================================================================
+// UTILITY FUNCTIONS - Formatting & Notifications
+// ============================================================================
 
 /**
- * Format currency with proper formatting
+ * Format amount as currency (USD)
+ * @param {number} amount - The amount to format
+ * @returns {string} Formatted currency string (e.g., "$24.99")
  */
 function formatCurrency(amount) {
     return new Intl.NumberFormat('en-US', {
@@ -39,7 +44,10 @@ function formatCurrency(amount) {
 }
 
 /**
- * Show toast notification with enhanced UX
+ * Display a toast notification message
+ * Automatically hides existing toasts before showing a new one
+ * @param {string} message - The message to display
+ * @param {string} type - The notification type: 'success', 'error', 'warning', or 'info'
  */
 function showToast(message, type = 'success') {
     // Remove existing toast
@@ -101,7 +109,8 @@ function showToast(message, type = 'success') {
 }
 
 /**
- * Update cart count with animation
+ * Update the cart badge count display with animation
+ * Adds bounce effect when count changes
  */
 function updateCartCount() {
     const cartCount = document.getElementById('cartCount');
@@ -121,7 +130,7 @@ function updateCartCount() {
 }
 
 /**
- * Save cart to localStorage
+ * Save cart to localStorage for persistence across sessions
  */
 function saveCart() {
     localStorage.setItem(CONFIG.STORAGE_KEYS.CART, JSON.stringify(cart));
@@ -129,7 +138,11 @@ function saveCart() {
 }
 
 /**
- * Get product data from card element
+ * Extract product information from a product card element
+ * Used when card element is available instead of product object
+ * @param {HTMLElement} card - The product card DOM element
+ * @returns {Object} Product data with id, title, price, and image
+ * @throws {Error} If required product information is missing
  */
 function getProductDataFromCard(card) {
     const title = card.querySelector('.product-title')?.textContent ||
@@ -149,12 +162,15 @@ function getProductDataFromCard(card) {
     return { id, title, price, image };
 }
 
-// =============================================================================
-// CART FUNCTIONALITY
-// =============================================================================
+// ============================================================================
+// CART FUNCTIONS
+// ============================================================================
 
 /**
- * Add product to cart with enhanced UX
+ * Add a product to the shopping cart
+ * Updates quantity if product already exists, shows user feedback
+ * @param {string} productId - The unique product identifier
+ * @param {number} quantity - Number of items to add (default: 1)
  */
 function addToCart(productId, quantity = 1) {
     try {
@@ -197,17 +213,20 @@ function addToCart(productId, quantity = 1) {
 }
 
 /**
- * Animate button for better UX
+ * Animate button to show success feedback
+ * Changes button text and color, then reverts after 1 second
+ * @param {HTMLElement} button - The button element to animate
  */
 function animateButton(button) {
     const originalText = button.innerHTML;
     const originalBg = button.style.background;
 
-    // Success state
+    // Show success state
     button.innerHTML = '<i class="fas fa-check me-2"></i>Added!';
     button.style.background = 'var(--success-color)';
     button.disabled = true;
 
+    // Reset after delay
     setTimeout(() => {
         button.innerHTML = originalText;
         button.style.background = originalBg;
@@ -216,7 +235,8 @@ function animateButton(button) {
 }
 
 /**
- * Remove item from cart
+ * Remove a product from the shopping cart
+ * @param {string} productId - The product ID to remove
  */
 function removeFromCart(productId) {
     const index = cart.findIndex(item => item.id === productId);
@@ -229,7 +249,9 @@ function removeFromCart(productId) {
 }
 
 /**
- * Update cart item quantity
+ * Update quantity for a cart item or remove if quantity <= 0
+ * @param {string} productId - The product ID to update
+ * @param {number} newQuantity - The new quantity amount
  */
 function updateCartQuantity(productId, newQuantity) {
     const item = cart.find(item => item.id === productId);
@@ -244,18 +266,20 @@ function updateCartQuantity(productId, newQuantity) {
 }
 
 /**
- * Get cart total
+ * Calculate the total cost of all items in the cart
+ * @returns {number} Total cart value
  */
 function getCartTotal() {
     return cart.reduce((total, item) => total + (item.price * item.qty), 0);
 }
 
-// =============================================================================
-// USER AUTHENTICATION
-// =============================================================================
+// ============================================================================
+// USER AUTHENTICATION & SESSION
+// ============================================================================
 
 /**
- * Check user session and update UI
+ * Check if user is logged in and update UI accordingly
+ * Shows/hides login/logout buttons and displays user name
  */
 function checkUserSession() {
     const accountName = document.getElementById('accountName');
@@ -284,7 +308,8 @@ function checkUserSession() {
 }
 
 /**
- * Handle user logout
+ * Log out the current user
+ * Clears user data, updates UI, and redirects to home page
  */
 function logout() {
     localStorage.removeItem(CONFIG.STORAGE_KEYS.USER);
@@ -298,12 +323,12 @@ function logout() {
     }, 1000);
 }
 
-// =============================================================================
-// PRODUCT DATA
-// =============================================================================
+// ============================================================================
+// PRODUCT FUNCTIONS
+// ============================================================================
 
 /**
- * Sample product data for demonstration
+ * Sample product data used for demonstration
  */
 const sampleProducts = [
     {
@@ -349,7 +374,9 @@ const sampleProducts = [
 ];
 
 /**
- * Create product card HTML
+ * Create product card HTML from product data
+ * @param {Object} product - Product object containing title, price, image, etc.
+ * @returns {string} HTML string for product card
  */
 function createProductCard(product) {
     return `
@@ -376,7 +403,9 @@ function createProductCard(product) {
 }
 
 /**
- * Generate star rating HTML
+ * Generate HTML for star rating display
+ * @param {number} rating - Rating value (0-5)
+ * @returns {string} HTML string with star icons
  */
 function generateStars(rating) {
     const fullStars = Math.floor(rating);
@@ -495,6 +524,16 @@ function setupEventListeners() {
             }
         });
     }
+
+    // Close cart dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        const cartDropdown = document.getElementById('cartDropdown');
+        const cartBtn = document.getElementById('cartBtn');
+
+        if (cartDropdown && !cartDropdown.contains(e.target) && !cartBtn.contains(e.target)) {
+            cartDropdown.classList.remove('active');
+        }
+    });
 }
 
 /**
@@ -544,14 +583,15 @@ function updateCartDropdown() {
                 <img src="${item.image}" alt="${item.title}">
                 <div class="cart-item-info">
                     <div class="cart-item-title">${item.title}</div>
-                    <div class="cart-item-price">${CoffeeHouse.formatCurrency(item.price)}</div>
+                    <div class="cart-item-price">${CoffeeHouse.formatCurrency(item.price)} each</div>
                     <div class="cart-item-quantity">
-                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty - 1})">-</button>
-                        <span>${item.qty}</span>
-                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty + 1})">+</button>
+                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty - 1})" title="Decrease quantity">−</button>
+                        <span class="qty-display">${item.qty}</span>
+                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty + 1})" title="Increase quantity">+</button>
                     </div>
+                    <div class="cart-item-subtotal">Subtotal: <strong>${CoffeeHouse.formatCurrency(item.price * item.qty)}</strong></div>
                 </div>
-                <button class="btn btn-sm btn-outline-danger" onclick="CoffeeHouse.removeFromCart('${item.id}')">
+                <button class="btn-remove-item" onclick="CoffeeHouse.removeFromCart('${item.id}')" title="Remove from cart">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
@@ -589,3 +629,14 @@ window.CoffeeHouse = {
     showToast,
     formatCurrency
 };
+
+
+// js/main.js
+function applyAuthUI(user) {
+    const show = (el, on) => el.classList.toggle('d-none', !on);
+    show(document.getElementById('loginBtn'), !user);
+    show(document.getElementById('registerBtn'), !user);
+    show(document.getElementById('divider'), !!user);
+    show(document.getElementById('logoutBtn'), !!user);
+    document.getElementById('accountName').textContent = user ? user.name : 'Account';
+}

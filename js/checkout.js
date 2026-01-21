@@ -1,24 +1,36 @@
 /**
- * =============================================================================
+ * ============================================================================
  * Checkout Page JavaScript - CoffeeHouse
- * Clean, Organized, and Functional Code
- * =============================================================================
+ * Handles checkout process, cart display, and order processing
+ * ============================================================================
  */
 
-// =============================================================================
-// GLOBAL VARIABLES
-// =============================================================================
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
 
 let selectedPaymentMethod = 'credit-card';
 let shippingCost = 5.99;
 let taxRate = 0.08; // 8% tax rate
+let discountPercentage = 0;
+let cartItems = [];
 
-// =============================================================================
+// ============================================================================
+// PROMO CODE MANAGEMENT
+// ============================================================================
+
+const PROMO_CODES = {
+    'WELCOME10': 0.10,  // 10% discount
+    'COFFEE15': 0.15,   // 15% discount
+    'SAVE20': 0.20      // 20% discount
+};
+
+// ============================================================================
 // INITIALIZATION
-// =============================================================================
+// ============================================================================
 
 /**
- * Initialize checkout page
+ * Initialize checkout page on page load
  */
 function initializeCheckout() {
     console.log('🛒 Checkout Page Initializing...');
@@ -36,39 +48,38 @@ function initializeCheckout() {
 }
 
 /**
- * Load cart items from localStorage
+ * Load cart items from localStorage and display
  */
 function loadCartItems() {
-    const cart = JSON.parse(localStorage.getItem('coffeehouse_cart')) || [];
+    cartItems = JSON.parse(localStorage.getItem('coffeehouse_cart')) || [];
     const cartItemsContainer = document.getElementById('checkoutCartItems');
 
-    if (cart.length === 0) {
+    if (cartItems.length === 0) {
         cartItemsContainer.innerHTML = `
-            <div class="text-center py-5">
-                <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
-                <h5>Your cart is empty</h5>
-                <p class="text-muted">Add some coffee beans to get started!</p>
+            <div class="empty-cart-message">
+                <i class="fas fa-shopping-cart"></i>
+                <h5 class="mt-3">Your cart is empty</h5>
+                <p class="text-muted">Add some coffee to your cart before proceeding</p>
                 <a href="products.html" class="btn btn-primary mt-3">
-                    <i class="fas fa-coffee me-2"></i>Shop Now
+                    <i class="fas fa-coffee me-2"></i>Browse Products
                 </a>
             </div>
         `;
         return;
     }
 
-    cartItemsContainer.innerHTML = cart.map(item => `
-        <div class="cart-item">
-            <div class="d-flex align-items-center">
-                <img src="${item.image}" alt="${item.title}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" class="me-3">
-                <div class="flex-grow-1">
-                    <h6 class="mb-1">${item.title}</h6>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Quantity: ${item.qty}</span>
-                        <span class="fw-bold">${CoffeeHouse.formatCurrency(item.price)}</span>
-                    </div>
+    cartItemsContainer.innerHTML = cartItems.map(item => `
+        <div class="cart-item-checkout">
+            <img src="${item.image}" alt="${item.title}">
+            <div class="cart-item-details">
+                <div class="cart-item-name">${item.title}</div>
+                <div class="cart-item-details-row">
+                    <span>Qty: <strong>${item.qty}</strong></span>
+                    <span>${CoffeeHouse.formatCurrency(item.price)} each</span>
                 </div>
-                <div class="fw-bold">
-                    ${CoffeeHouse.formatCurrency(item.price * item.qty)}
+                <div class="cart-item-details-row">
+                    <span>Subtotal:</span>
+                    <span><strong>${CoffeeHouse.formatCurrency(item.price * item.qty)}</strong></span>
                 </div>
             </div>
         </div>
@@ -76,28 +87,77 @@ function loadCartItems() {
 }
 
 /**
- * Calculate order totals
+ * Calculate order totals including subtotal, tax, shipping, and discount
  */
 function calculateTotals() {
-    const cart = JSON.parse(localStorage.getItem('coffeehouse_cart')) || [];
-
-    if (cart.length === 0) {
+    if (cartItems.length === 0) {
         document.getElementById('subtotal').textContent = '$0.00';
         document.getElementById('shipping').textContent = '$0.00';
         document.getElementById('tax').textContent = '$0.00';
         document.getElementById('total').textContent = '$0.00';
+        document.getElementById('discountRow').style.display = 'none';
         return;
     }
 
-    const subtotal = cart.reduce((total, item) => total + (item.price * item.qty), 0);
-    const tax = subtotal * taxRate;
-    const total = subtotal + shippingCost + tax;
+    // Calculate subtotal
+    const subtotal = cartItems.reduce((total, item) => total + (item.price * item.qty), 0);
 
+    // Calculate discount
+    const discount = subtotal * discountPercentage;
+    const subtotalAfterDiscount = subtotal - discount;
+
+    // Calculate tax
+    const tax = subtotalAfterDiscount * taxRate;
+
+    // Calculate total
+    const total = subtotalAfterDiscount + shippingCost + tax;
+
+    // Update UI
     document.getElementById('subtotal').textContent = CoffeeHouse.formatCurrency(subtotal);
     document.getElementById('shipping').textContent = CoffeeHouse.formatCurrency(shippingCost);
     document.getElementById('tax').textContent = CoffeeHouse.formatCurrency(tax);
     document.getElementById('total').textContent = CoffeeHouse.formatCurrency(total);
+
+    // Show/hide discount row
+    const discountRow = document.getElementById('discountRow');
+    if (discountPercentage > 0) {
+        discountRow.style.display = 'flex';
+        document.getElementById('discount').textContent = CoffeeHouse.formatCurrency(discount);
+    } else {
+        discountRow.style.display = 'none';
+    }
 }
+
+/**
+ * Apply promo code to order
+ */
+function applyPromoCode() {
+    const promoCode = document.getElementById('promoCode').value.toUpperCase().trim();
+    const promoMessage = document.getElementById('promoMessage');
+
+    if (!promoCode) {
+        promoMessage.textContent = '';
+        discountPercentage = 0;
+        calculateTotals();
+        return;
+    }
+
+    if (PROMO_CODES[promoCode]) {
+        discountPercentage = PROMO_CODES[promoCode];
+        const discountPercent = Math.round(discountPercentage * 100);
+        promoMessage.innerHTML = `<i class="fas fa-check-circle text-success me-2"></i>Promo code applied! ${discountPercent}% discount saved.`;
+        promoMessage.className = 'text-success';
+        calculateTotals();
+        CoffeeHouse.showToast(`${discountPercent}% discount applied!`, 'success');
+    } else {
+        promoMessage.textContent = 'Invalid promo code';
+        promoMessage.className = 'text-danger';
+        discountPercentage = 0;
+        calculateTotals();
+    }
+}
+
+
 
 /**
  * Select payment method
@@ -117,7 +177,7 @@ function selectPayment(method) {
 }
 
 /**
- * Setup event listeners
+ * Setup all event listeners
  */
 function setupEventListeners() {
     // Checkout form submission
@@ -129,9 +189,29 @@ function setupEventListeners() {
     // Payment method selection
     document.querySelectorAll('.payment-method').forEach(method => {
         method.addEventListener('click', (e) => {
-            selectPayment(e.currentTarget.querySelector('input[type="radio"]').value);
+            const radioButton = e.currentTarget.querySelector('input[type="radio"]');
+            if (radioButton) {
+                selectPayment(radioButton.value);
+            }
         });
     });
+
+    // Promo code application
+    const applyPromoBtn = document.getElementById('applyPromoBtn');
+    if (applyPromoBtn) {
+        applyPromoBtn.addEventListener('click', applyPromoCode);
+    }
+
+    // Allow Enter key to apply promo code
+    const promoInput = document.getElementById('promoCode');
+    if (promoInput) {
+        promoInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                applyPromoCode();
+            }
+        });
+    }
 }
 
 /**
@@ -145,6 +225,13 @@ function handleCheckoutSubmit(event) {
         return;
     }
 
+    // Calculate final totals for order
+    const subtotal = cartItems.reduce((total, item) => total + (item.price * item.qty), 0);
+    const discount = subtotal * discountPercentage;
+    const subtotalAfterDiscount = subtotal - discount;
+    const tax = subtotalAfterDiscount * taxRate;
+    const total = subtotalAfterDiscount + shippingCost + tax;
+
     // Get form data
     const formData = {
         firstName: document.getElementById('firstName').value,
@@ -156,11 +243,12 @@ function handleCheckoutSubmit(event) {
         zipCode: document.getElementById('zipCode').value,
         country: document.getElementById('country').value,
         paymentMethod: selectedPaymentMethod,
-        cart: JSON.parse(localStorage.getItem('coffeehouse_cart')) || [],
-        subtotal: document.getElementById('subtotal').textContent,
-        shipping: document.getElementById('shipping').textContent,
-        tax: document.getElementById('tax').textContent,
-        total: document.getElementById('total').textContent,
+        cart: cartItems,
+        subtotal: CoffeeHouse.formatCurrency(subtotal),
+        discount: CoffeeHouse.formatCurrency(discount),
+        shipping: CoffeeHouse.formatCurrency(shippingCost),
+        tax: CoffeeHouse.formatCurrency(tax),
+        total: CoffeeHouse.formatCurrency(total),
         orderDate: new Date().toISOString()
     };
 

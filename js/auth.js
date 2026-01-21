@@ -1,13 +1,13 @@
 /**
- * =============================================================================
- * Authentication System - WatchStore
- * Clean, Organized, and Functional Code
- * =============================================================================
+ * ============================================================================
+ * Authentication System - CoffeeHouse
+ * Handles user login, registration, validation, and session management
+ * ============================================================================
  */
 
-// =============================================================================
+// ============================================================================
 // CONFIGURATION
-// =============================================================================
+// ============================================================================
 
 const AUTH_CONFIG = {
     STORAGE_KEYS: {
@@ -18,12 +18,15 @@ const AUTH_CONFIG = {
     TOKEN_EXPIRY: 24 * 60 * 60 * 1000 // 24 hours
 };
 
-// =============================================================================
-// UTILITY FUNCTIONS
-// =============================================================================
+// ============================================================================
+// UTILITY FUNCTIONS - Notifications & Validation
+// ============================================================================
 
 /**
- * Show toast notification
+ * Display a toast notification message
+ * Automatically hides after 3 seconds
+ * @param {string} message - The message to display
+ * @param {string} type - The notification type: 'success', 'error', 'warning', or 'info'
  */
 function showToast(message, type = 'success') {
     // Remove existing toast
@@ -85,7 +88,9 @@ function showToast(message, type = 'success') {
 }
 
 /**
- * Validate email format
+ * Validate email format using regex pattern
+ * @param {string} email - The email address to validate
+ * @returns {boolean} True if valid email format, false otherwise
  */
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -93,7 +98,10 @@ function isValidEmail(email) {
 }
 
 /**
- * Check password strength
+ * Evaluate password strength based on criteria
+ * Checks length, uppercase, lowercase, numbers, and special characters
+ * @param {string} password - The password to evaluate
+ * @returns {number} Strength score (0-6)
  */
 function checkPasswordStrength(password) {
     let strength = 0;
@@ -109,7 +117,9 @@ function checkPasswordStrength(password) {
 }
 
 /**
- * Update password strength indicator
+ * Update password strength indicator UI
+ * Shows strength bar with visual feedback based on password quality
+ * @param {string} password - The password to evaluate
  */
 function updatePasswordStrength(password) {
     const strengthBar = document.getElementById('passwordStrength');
@@ -136,7 +146,9 @@ function updatePasswordStrength(password) {
 }
 
 /**
- * Store user data
+ * Store user data in localStorage with optional "remember me" feature
+ * @param {Object} userData - The user object to store
+ * @param {boolean} remember - Whether to save email/name for next login
  */
 function storeUser(userData, remember = false) {
     const user = {
@@ -156,14 +168,16 @@ function storeUser(userData, remember = false) {
 }
 
 /**
- * Generate simple token
+ * Generate a simple authentication token
+ * @returns {string} Random token string
  */
 function generateToken() {
     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
 /**
- * Get stored user data
+ * Retrieve stored user data from localStorage
+ * @returns {Object|null} User object if exists, null otherwise
  */
 function getStoredUser() {
     try {
@@ -176,7 +190,9 @@ function getStoredUser() {
 }
 
 /**
- * Check if user is logged in
+ * Check if user session is still valid
+ * Verifies token expiry time
+ * @returns {boolean} True if user is logged in and token valid
  */
 function isLoggedIn() {
     const user = getStoredUser();
@@ -191,7 +207,8 @@ function isLoggedIn() {
 }
 
 /**
- * Logout user
+ * Log out the current user
+ * Clears all user data from localStorage
  */
 function logout() {
     localStorage.removeItem(AUTH_CONFIG.STORAGE_KEYS.USER);
