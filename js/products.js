@@ -25,7 +25,7 @@ const allProducts = [
         id: 'colombian-blend',
         title: 'Colombian Medium Blend',
         price: 18.99,
-        image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b3f4?w=400&h=300&fit=crop',
+        image: 'https://b.zmtcdn.com/data/pictures/chains/8/18630948/149f4d2fc28da147452d5db105d17905.png',
         category: 'blends',
         badge: 'Popular',
         rating: 4.6,
@@ -36,7 +36,7 @@ const allProducts = [
         id: 'espresso-roast',
         title: 'Italian Espresso Roast',
         price: 22.99,
-        image: 'https://images.unsplash.com/photo-1578873691223-d6d3e1b89d3d?w=400&h=300&fit=crop',
+        image: 'https://cloudassets.starbucks.com/is/image/sbuxcorp/SBX20211210_CaramelRibbonCrunchFrapp?impolicy=1by1_tight_288&crop=495,495,810,810&wid=288&hei=288&qlt=85',
         category: 'espresso',
         badge: 'Hot',
         rating: 4.7,
@@ -58,7 +58,7 @@ const allProducts = [
         id: 'organic-peru',
         title: 'Organic Peru Single Origin',
         price: 26.99,
-        image: 'https://images.unsplash.com/photo-1559386674-129bef2ae57d?w=400&h=300&fit=crop',
+        image: 'https://huupa.coffee/cdn/shop/articles/granos_de_cafe-792033_a69513e8-8fb8-4a3b-9890-c66d4fb70f59.jpg?v=1742927345',
         category: 'organic',
         badge: 'Premium',
         rating: 4.9,
@@ -69,7 +69,7 @@ const allProducts = [
         id: 'guatemalan-antigua',
         title: 'Guatemalan Antigua',
         price: 21.99,
-        image: 'https://images.unsplash.com/photo-1514432324607-2e467f4af445?w=400&h=300&fit=crop',
+        image: 'https://www.cafeorigenselecto.com/wp-content/uploads/2023/01/1020x576-Cafe-Origen-Selecto-1.jpg',
         category: 'single-origin',
         badge: 'Limited',
         rating: 4.8,
@@ -91,7 +91,7 @@ const allProducts = [
         id: 'french-roast-dark',
         title: 'French Roast Dark',
         price: 19.99,
-        image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop',
+        image: 'https://i.pinimg.com/474x/1c/58/ff/1c58ffd559a24b3bdb951bdb5aafcd7c.jpg',
         category: 'espresso',
         badge: 'Pro',
         rating: 4.6,
@@ -102,7 +102,7 @@ const allProducts = [
         id: 'sumatra-mandheling',
         title: 'Sumatra Mandheling',
         price: 23.99,
-        image: 'https://images.unsplash.com/photo-1497636577773-f1231844b47f?w=400&h=300&fit=crop',
+        image: 'https://www.taylorlane.com/cdn/shop/articles/Is-Coffee-A-Vegetable_03559fea-ee85-46e9-8caa-be4a36807637_1000x.jpg?v=1756337156',
         category: 'single-origin',
         badge: 'Rare',
         rating: 4.8,
@@ -113,7 +113,7 @@ const allProducts = [
         id: 'house-decaf-organic',
         title: 'House Organic Decaf',
         price: 18.99,
-        image: 'https://images.unsplash.com/photo-1437668260481-9bffe0eda5d9?w=400&h=300&fit=crop',
+        image: 'https://png.pngtree.com/thumb_back/fh260/background/20241127/pngtree-coffee-beans-splash-into-a-steaming-cup-creating-a-dynamic-image-image_16657212.jpg',
         category: 'decaf',
         badge: 'Exclusive',
         rating: 5.0,
@@ -166,20 +166,7 @@ function createProductCard(product) {
                 <div class="product-image">
                     <img src="${product.image}" alt="${product.title}">
                     ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                    <div class="product-actions">
-                        <button class="product-action-btn wishlist ${isInWishlist ? 'active' : ''}" 
-                                onclick="toggleWishlist('${product.id}')" title="Add to Wishlist">
-                            <i class="bi bi-heart${isInWishlist ? '-fill' : ''}"></i>
-                        </button>
-                        <button class="product-action-btn" onclick="showQuickView('${product.id}')" 
-                                title="Quick View">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        <button class="product-action-btn" onclick="compareProduct('${product.id}')" 
-                                title="Compare">
-                            <i class="bi bi-arrows-angle-expand"></i>
-                        </button>
-                    </div>
+                
                     <div class="product-overlay">
                         <button class="quick-view-btn" onclick="showQuickView('${product.id}')">
                             <i class="bi bi-eye me-2"></i>Quick View
