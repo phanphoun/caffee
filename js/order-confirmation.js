@@ -1,17 +1,4 @@
-/**
- * =============================================================================
- * Order Confirmation Page JavaScript - CoffeeHouse
- * Clean, Organized, and Functional Code
- * =============================================================================
- */
 
-// =============================================================================
-// INITIALIZATION
-// =============================================================================
-
-/**
- * Initialize order confirmation page
- */
 function initializeOrderConfirmation() {
     console.log('📋 Order Confirmation Page Initializing...');
 
@@ -32,7 +19,6 @@ function initializeOrderConfirmation() {
 }
 
 /**
- * Load order details from localStorage
  */
 function loadOrderDetails(orderId) {
     const orders = JSON.parse(localStorage.getItem('coffeehouse_orders')) || [];

@@ -13,9 +13,6 @@ let selectedPaymentMethod = 'credit-card';
 let shippingCost = 5.99;
 let taxRate = 0.08; // 8% tax rate
 
-// =============================================================================
-// INITIALIZATION
-// =============================================================================
 
 /**
  * Initialize checkout page
