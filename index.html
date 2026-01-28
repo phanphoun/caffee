@@ -17,20 +17,21 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" role="navigation" aria-label="Main navigation">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">
-                <i class="fas fa-coffee me-2"></i>CoffeeHouse
+            <a class="navbar-brand fw-bold" href="index.html" aria-label="CoffeeHouse - Home">
+                <i class="fas fa-coffee me-2" aria-hidden="true"></i>CoffeeHouse
             </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
+                        <a class="nav-link active" href="index.html" aria-current="page">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="products.html">Products</a>
@@ -47,44 +48,109 @@
                 </ul>
 
                 <div class="d-flex align-items-center ms-3">
-                    <div class="dropdown">
+                    <div class="account-dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" id="accountDropdown"
-                            data-bs-toggle="dropdown">
-                            <i class="bi bi-person-fill me-1"></i>
+                            data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account menu">
+                            <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
                             <span id="accountName">Account</span>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" id="loginBtn">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i> Profile
-                                </a></li>
-                            <li><a class="dropdown-item" href="login.html" id="registerBtn">
-                                    <i class="bi bi-person-plus me-2"></i>Logout
-                                </a></li>
-                            <li>
-                                <hr class="dropdown-divider" id="divider" style="display:none;">
+                        <ul class="dropdown-menu account-menu" role="menu" aria-labelledby="accountDropdown">
+                            <!-- User Profile Section -->
+                            <li class="dropdown-header" id="userHeader" style="display:none;">
+                                <div class="user-info">
+                                    <div class="user-avatar">
+                                        <i class="bi bi-person-circle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-name" id="headerUserName">Guest User</div>
+                                        <div class="user-email" id="headerUserEmail">Not logged in</div>
+                                    </div>
+                                </div>
                             </li>
 
+                            <!-- Menu Items for Logged In Users -->
+                            <li id="profileMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" id="loginBtn" role="menuitem">
+                                    <i class="bi bi-person me-2" aria-hidden="true"></i>
+                                    <span>My Profile</span>
+                                    <small class="text-muted">Manage your account</small>
+                                </a>
+                            </li>
+
+                            <li id="ordersMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" role="menuitem">
+                                    <i class="bi bi-box-seam me-2" aria-hidden="true"></i>
+                                    <span>Order History</span>
+                                    <small class="text-muted">View your orders</small>
+                                </a>
+                            </li>
+
+                            <li id="wishlistMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" role="menuitem">
+                                    <i class="bi bi-heart me-2" aria-hidden="true"></i>
+                                    <span>Wishlist</span>
+                                    <small class="text-muted">Saved items</small>
+                                </a>
+                            </li>
+
+                            <li id="settingsMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" role="menuitem">
+                                    <i class="bi bi-gear me-2" aria-hidden="true"></i>
+                                    <span>Settings</span>
+                                    <small class="text-muted">Preferences</small>
+                                </a>
+                            </li>
+
+                            <li id="divider" style="display:none;">
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Auth Items -->
+                            <li id="loginMenuItem">
+                                <a class="dropdown-item" href="login.html" role="menuitem">
+                                    <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>
+                                    <span>Sign In</span>
+                                    <small class="text-muted">Access your account</small>
+                                </a>
+                            </li>
+
+                            <li id="registerMenuItem">
+                                <a class="dropdown-item" href="register.html" role="menuitem">
+                                    <i class="bi bi-person-plus me-2" aria-hidden="true"></i>
+                                    <span>Create Account</span>
+                                    <small class="text-muted">Join CoffeeHouse</small>
+                                </a>
+                            </li>
+
+                            <li id="logoutMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" id="logoutBtn" role="menuitem">
+                                    <i class="bi bi-box-arrow-left me-2" aria-hidden="true"></i>
+                                    <span>Sign Out</span>
+                                    <small class="text-muted">Log out of your account</small>
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
-                    <button class="btn btn-outline-light ms-2 position-relative" id="cartBtn">
-                        <!-- <i class="bi bi-cart me-1"></i> -->
-                        <i class="ri-shopping-cart-line"></i>
-                        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle"
-                            id="cartCount">0</span>
+                    <button class="btn btn-outline-light ms-2 position-relative" id="cartBtn"
+                        aria-label="Shopping cart with 0 items">
+                        <i class="ri-shopping-cart-line" aria-hidden="true"></i>
+                        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle" id="cartCount"
+                            aria-label="Cart item count">0</span>
                     </button>
                     <!-- Cart Dropdown -->
-                    <div class="cart-dropdown" id="cartDropdown">
+                    <div class="cart-dropdown" id="cartDropdown" role="region" aria-label="Shopping cart items">
                         <div class="cart-dropdown-header">
-                            <i class="ri-shopping-cart-line me-2"></i>Shopping Cart
+                            <i class="ri-shopping-cart-line me-2" aria-hidden="true"></i>Shopping Cart
                         </div>
-                        <div id="cartItems"></div>
+                        <div id="cartItems" role="list" aria-label="Cart items"></div>
                         <div class="cart-dropdown-footer">
                             <div class="cart-total">
                                 <span>Total:</span>
                                 <span id="cartTotal">$0.00</span>
                             </div>
-                            <button class="cart-checkout-btn" onclick="window.location.href='checkout.html'">
+                            <button class="cart-checkout-btn" onclick="window.location.href='checkout.html'"
+                                aria-label="Proceed to checkout">
                                 Proceed to Checkout
                             </button>
                         </div>
@@ -95,7 +161,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section class="hero-section" role="banner" aria-label="Premium Coffee Beans">
         <div class="container">
             <div class="row align-items-center min-vh-100">
                 <div class="col-lg-6">
@@ -103,12 +169,14 @@
                         <h1 class="display-4 fw-bold mb-4">Premium Coffee Beans for Every Moment</h1>
                         <p class="lead mb-4">Discover our exclusive collection of artisanal coffee, combining rich
                             flavor with exceptional quality.</p>
-                        <div class="d-flex gap-3">
-                            <a href="products.html" class="btn btn-primary btn-lg">
-                                <i class="bi bi-shop me-2"></i>Shop Now
+                        <div class="d-flex gap-3" role="group" aria-label="Primary actions">
+                            <a href="products.html" class="btn btn-primary btn-lg"
+                                aria-label="Shop now - browse our coffee products">
+                                <i class="bi bi-shop me-2" aria-hidden="true"></i>Shop Now
                             </a>
-                            <a href="#featured" class="btn btn-outline-light btn-lg">
-                                <i class="bi bi-star me-2"></i>Featured
+                            <a href="#coffeeJourney" class="btn btn-outline-light btn-lg"
+                                aria-label="View coffee journey experience">
+                                <i class="bi bi-cup-hot me-2" aria-hidden="true"></i>Coffee Journey
                             </a>
                         </div>
                     </div>
@@ -116,7 +184,7 @@
                 <div class="col-lg-6">
                     <div class="hero-image">
                         <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop"
-                            alt="Premium Coffee" class="img-fluid rounded-3 shadow-lg">
+                            alt="Premium coffee beans and brewing equipment" class="img-fluid rounded-3 shadow-lg">
                     </div>
                 </div>
             </div>
@@ -124,64 +192,122 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-5 bg-light">
+    <section class="py-5 bg-light" aria-label="Company features and benefits">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-3">
-                    <div class="feature-card text-center p-4">
+                    <div class="feature-card text-center p-4" role="article">
                         <div class="feature-icon mb-3">
-                            <i class="fas fa-shipping-fast fa-2x text-primary"></i>
+                            <i class="fas fa-shipping-fast fa-2x text-primary" aria-hidden="true"></i>
                         </div>
                         <h5>Free Shipping</h5>
                         <p class="text-muted">On orders over $100</p>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="feature-card text-center p-4">
+                    <div class="feature-card text-center p-4" role="article">
                         <div class="feature-icon mb-3">
-                            <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                            <i class="fas fa-shield-alt fa-2x text-primary" aria-hidden="true"></i>
                         </div>
                         <h5>Secure Payment</h5>
                         <p class="text-muted">100% secure checkout</p>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="feature-card text-center p-4">
+                    <div class="feature-card text-center p-4" role="article">
                         <div class="feature-icon mb-3">
-                            <i class="fas fa-undo fa-2x text-primary"></i>
+                            <i class="fas fa-undo fa-2x text-primary" aria-hidden="true"></i>
                         </div>
                         <h5>Easy Returns</h5>
                         <p class="text-muted">30-day return policy</p>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="feature-card text-center p-4">
+                    <div class="feature-card text-center p-4" role="article">
                         <div class="feature-icon mb-3">
-                            <i class="fas fa-headset fa-2x text-primary"></i>
+                            <i class="fas fa-headset fa-2x text-primary" aria-hidden="true"></i>
                         </div>
                         <h5>24/7 Support</h5>
                         <p class="text-muted">Dedicated customer service</p>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 
-    <!-- Featured Products -->
-    <section id="featured" class="py-5">
+    <!-- Coffee Journey Experience -->
+    <section id="coffeeJourney" class="py-5 bg-light" aria-label="Coffee journey and experience">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="display-5 fw-bold">Featured Products</h2>
-                <p class="lead text-muted">Handpicked coffee beans from our premium collection</p>
+                <h2 class="display-5 fw-bold">Your Coffee Journey</h2>
+                <p class="lead text-muted">From bean to cup - enjoy the art of great coffee</p>
             </div>
 
-            <div class="row g-4" id="featuredProducts">
-                <!-- Products will be loaded here by JavaScript -->
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-6">
+                    <div class="journey-content">
+                        <div class="journey-step mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="step-number me-3">1</div>
+                                <div>
+                                    <h5 class="fw-bold">Pick Your Beans</h5>
+                                    <p class="text-muted">Choose from our hand-picked collection of great coffee beans
+                                        from the best places.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="journey-step mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="step-number me-3">2</div>
+                                <div>
+                                    <h5 class="fw-bold">Fresh Roasting</h5>
+                                    <p class="text-muted">Our coffee experts carefully make each batch to bring out the
+                                        best tastes.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="journey-step mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="step-number me-3">3</div>
+                                <div>
+                                    <h5 class="fw-bold">Perfect Brewing</h5>
+                                    <p class="text-muted">Learn the best ways to make coffee to unlock the rich smells
+                                        and tastes.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="journey-step mb-4">
+                            <div class="d-flex align-items-start">
+                                <div class="step-number me-3">4</div>
+                                <div>
+                                    <h5 class="fw-bold">Enjoy Every Sip</h5>
+                                    <p class="text-muted">Savor the moment with your perfectly made cup of great coffee.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="journey-image">
+                        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=500&fit=crop"
+                            alt="Coffee making process and experience" class="img-fluid rounded-3 shadow-lg">
+                        <div class="journey-badge">
+                            <span class="badge bg-primary px-3 py-2">Great Quality</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="text-center mt-5">
-                <a href="products.html" class="btn btn-primary btn-lg">
-                    View All Products <i class="bi bi-arrow-right ms-2"></i>
+                <a href="products.html" class="btn btn-primary btn-lg me-3" aria-label="Start your coffee journey">
+                    <i class="bi bi-cup-hot me-2"></i>Start Your Journey
+                </a>
+                <a href="about.html" class="btn btn-outline-primary btn-lg" aria-label="Learn about our story">
+                    <i class="bi bi-book me-2"></i>Our Story
                 </a>
             </div>
         </div>
@@ -212,15 +338,21 @@
                 <div class="col-12 col-lg-6">
                     <h6 class="mb-3">Newsletter</h6>
                     <p class="text-white-50">Subscribe for exclusive offers and new arrivals</p>
-                    <form class="row g-2" id="newsletterForm" novalidate>
+                    <form class="row g-2" id="newsletterForm" novalidate role="form"
+                        aria-label="Newsletter subscription form">
                         <div class="col-sm-8">
-                            <label for="newsletterEmail" class="visually-hidden">Email</label>
+                            <label for="newsletterEmail" class="visually-hidden">Email address for newsletter</label>
                             <input id="newsletterEmail" type="email" class="form-control" placeholder="Your email"
-                                required>
+                                required aria-required="true" aria-describedby="newsletterHelp">
                             <div class="invalid-feedback">Please enter a valid email.</div>
+                            <small id="newsletterHelp" class="form-text text-muted">
+                                Get exclusive offers and new coffee arrivals
+                            </small>
                         </div>
                         <div class="col-sm-4 d-grid">
-                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                            <button type="submit" class="btn btn-primary" aria-label="Subscribe to newsletter">
+                                Subscribe
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -233,47 +365,59 @@
     </footer>
 
     <!-- Profile Modal -->
-    <div id="profileModal" class="profile-modal">
-        <div class="profile-modal-content">
+    <div id="profileModal" class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+        <div class="profile-modal-content" role="document">
             <div class="profile-modal-header">
-                <h2><i class="bi bi-person-circle me-2"></i>My Profile</h2>
-                <button id="closeProfileModalBtn" class="close-modal-btn" aria-label="Close">
-                    <i class="bi bi-x-lg"></i>
+                <h2 id="profileModalTitle">
+                    <i class="bi bi-person-circle me-2" aria-hidden="true"></i>My Profile
+                </h2>
+                <button id="closeProfileModalBtn" class="close-modal-btn" aria-label="Close profile modal">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
                 </button>
             </div>
 
-            <form id="profileForm" class="profile-form">
+            <form id="profileForm" class="profile-form" role="form" aria-label="Profile information">
                 <div class="profile-form-group">
                     <label for="profileName">Full Name *</label>
-                    <input type="text" id="profileName" required placeholder="Enter your full name">
+                    <input type="text" id="profileName" required placeholder="Enter your full name" aria-required="true"
+                        aria-describedby="nameHelp">
+                    <small id="nameHelp" class="form-text text-muted">Your full name as it should appear</small>
                 </div>
 
                 <div class="profile-form-group">
                     <label for="profileUsername">Username *</label>
-                    <input type="text" id="profileUsername" required placeholder="Enter your username">
+                    <input type="text" id="profileUsername" required placeholder="Enter your username"
+                        aria-required="true" aria-describedby="usernameHelp">
+                    <small id="usernameHelp" class="form-text text-muted">Letters, numbers, and underscores only</small>
                 </div>
 
                 <div class="profile-form-group">
                     <label for="profileEmail">Email *</label>
-                    <input type="email" id="profileEmail" required placeholder="Enter your email">
+                    <input type="email" id="profileEmail" required placeholder="Enter your email" aria-required="true"
+                        aria-describedby="emailHelp">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email</small>
                 </div>
 
                 <div class="profile-form-group">
                     <label for="profilePhone">Phone Number</label>
-                    <input type="tel" id="profilePhone" placeholder="Enter your phone number">
+                    <input type="tel" id="profilePhone" placeholder="Enter your phone number"
+                        aria-describedby="phoneHelp">
+                    <small id="phoneHelp" class="form-text text-muted">Optional - for order updates</small>
                 </div>
 
                 <div class="profile-form-group">
                     <label for="profileBio">Bio</label>
-                    <textarea id="profileBio" placeholder="Tell us about yourself" rows="4"></textarea>
+                    <textarea id="profileBio" placeholder="Tell us about yourself" rows="4" aria-describedby="bioHelp"
+                        maxlength="500"></textarea>
+                    <small id="bioHelp" class="form-text text-muted">Maximum 500 characters</small>
                 </div>
 
-                <div class="profile-form-actions">
+                <div class="profile-form-actions" role="group" aria-label="Profile form actions">
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-circle me-2"></i>Save Changes
+                        <i class="bi bi-check-circle me-2" aria-hidden="true"></i>Save Changes
                     </button>
                     <button type="button" id="cancelProfileBtn" class="btn btn-secondary">
-                        <i class="bi bi-x-circle me-2"></i>Cancel
+                        <i class="bi bi-x-circle me-2" aria-hidden="true"></i>Cancel
                     </button>
                 </div>
             </form>

@@ -11,7 +11,7 @@
 
 /**
  * Open the user profile modal
- * Loads current user data into form fields
+ * Loads current user data into form fields with error handling
  */
 function openProfileModal() {
     const modal = document.getElementById('profileModal');
@@ -20,26 +20,26 @@ function openProfileModal() {
         return;
     }
 
-    // Load current user data from localStorage
+    // Load current user data using secure storage
     let currentUser = null;
     if (typeof window.currentUser !== 'undefined' && window.currentUser) {
         currentUser = window.currentUser;
     } else {
-        currentUser = JSON.parse(localStorage.getItem('coffeehouse_user')) || {};
+        currentUser = safeStorageGet('coffeehouse_user', {});
     }
 
-    // Populate form fields with user data
+    // Populate form fields with sanitized user data
     const profileNameInput = document.getElementById('profileName');
     const profileUsernameInput = document.getElementById('profileUsername');
     const profileEmailInput = document.getElementById('profileEmail');
     const profilePhoneInput = document.getElementById('profilePhone');
     const profileBioInput = document.getElementById('profileBio');
 
-    if (profileNameInput) profileNameInput.value = currentUser.name || '';
-    if (profileUsernameInput) profileUsernameInput.value = currentUser.username || '';
-    if (profileEmailInput) profileEmailInput.value = currentUser.email || '';
-    if (profilePhoneInput) profilePhoneInput.value = currentUser.phone || '';
-    if (profileBioInput) profileBioInput.value = currentUser.bio || '';
+    if (profileNameInput) profileNameInput.value = sanitizeInput(currentUser.name || '');
+    if (profileUsernameInput) profileUsernameInput.value = sanitizeInput(currentUser.username || '');
+    if (profileEmailInput) profileEmailInput.value = sanitizeInput(currentUser.email || '');
+    if (profilePhoneInput) profilePhoneInput.value = sanitizeInput(currentUser.phone || '');
+    if (profileBioInput) profileBioInput.value = sanitizeInput(currentUser.bio || '');
 
     // Show modal
     modal.style.display = 'flex';
@@ -59,29 +59,37 @@ function closeProfileModal() {
 
 /**
  * Save user profile changes
- * Validates form data and updates localStorage
+ * Validates form data, sanitizes inputs, and updates localStorage securely
  */
 function saveProfileChanges(event) {
     event.preventDefault();
 
-    // Get form values
-    const name = document.getElementById('profileName').value.trim();
-    const username = document.getElementById('profileUsername').value.trim();
-    const email = document.getElementById('profileEmail').value.trim();
-    const phone = document.getElementById('profilePhone').value.trim();
-    const bio = document.getElementById('profileBio').value.trim();
+    // Get and sanitize form values
+    const name = sanitizeInput(document.getElementById('profileName').value);
+    const username = sanitizeInput(document.getElementById('profileUsername').value);
+    const email = sanitizeInput(document.getElementById('profileEmail').value);
+    const phone = sanitizeInput(document.getElementById('profilePhone').value);
+    const bio = sanitizeInput(document.getElementById('profileBio').value);
 
-    // Validation
-    if (!name) {
+    // Enhanced validation
+    if (!name || name.length < 2) {
         if (typeof showToast !== 'undefined') {
-            showToast('Please enter your name', 'error');
+            showToast('Please enter a valid name (at least 2 characters)', 'error');
         }
         return;
     }
 
-    if (!username) {
+    if (!username || username.length < 3) {
         if (typeof showToast !== 'undefined') {
-            showToast('Please enter a username', 'error');
+            showToast('Please enter a valid username (at least 3 characters)', 'error');
+        }
+        return;
+    }
+
+    // Username validation: alphanumeric and underscores only
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        if (typeof showToast !== 'undefined') {
+            showToast('Username can only contain letters, numbers, and underscores', 'error');
         }
         return;
     }
@@ -100,12 +108,20 @@ function saveProfileChanges(event) {
         return;
     }
 
-    // Create updated user object
+    // Bio length validation
+    if (bio.length > 500) {
+        if (typeof showToast !== 'undefined') {
+            showToast('Bio must be less than 500 characters', 'error');
+        }
+        return;
+    }
+
+    // Load current user data using secure storage
     let currentUser = null;
     if (typeof window.currentUser !== 'undefined' && window.currentUser) {
         currentUser = window.currentUser;
     } else {
-        currentUser = JSON.parse(localStorage.getItem('coffeehouse_user')) || {};
+        currentUser = safeStorageGet('coffeehouse_user', {});
     }
 
     const updatedUser = {
@@ -118,29 +134,33 @@ function saveProfileChanges(event) {
         updatedAt: new Date().toISOString()
     };
 
-    // Save to localStorage
-    localStorage.setItem('coffeehouse_user', JSON.stringify(updatedUser));
+    // Save to localStorage using secure storage
+    if (safeStorageSet('coffeehouse_user', updatedUser)) {
+        // Update global currentUser variable
+        if (typeof window.currentUser !== 'undefined') {
+            window.currentUser = updatedUser;
+        }
 
-    // Update global currentUser variable
-    if (typeof window.currentUser !== 'undefined') {
-        window.currentUser = updatedUser;
+        // Update UI - account name in navbar
+        const accountName = document.getElementById('accountName');
+        if (accountName) {
+            accountName.textContent = name;
+        }
+
+        // Show success message
+        if (typeof showToast !== 'undefined') {
+            showToast('Profile updated successfully!', 'success');
+        }
+
+        // Close modal after short delay
+        setTimeout(() => {
+            closeProfileModal();
+        }, 500);
+    } else {
+        if (typeof showToast !== 'undefined') {
+            showToast('Failed to save profile. Please try again.', 'error');
+        }
     }
-
-    // Update UI - account name in navbar
-    const accountName = document.getElementById('accountName');
-    if (accountName) {
-        accountName.textContent = name;
-    }
-
-    // Show success message
-    if (typeof showToast !== 'undefined') {
-        showToast('Profile updated successfully!', 'success');
-    }
-
-    // Close modal after short delay
-    setTimeout(() => {
-        closeProfileModal();
-    }, 500);
 }
 
 /**
@@ -165,14 +185,14 @@ function isValidPhone(phone) {
 }
 
 /**
- * Reset profile form to current user data
+ * Reset profile form to current user data using secure storage
  */
 function resetProfileForm() {
     let currentUser = null;
     if (typeof window.currentUser !== 'undefined' && window.currentUser) {
         currentUser = window.currentUser;
     } else {
-        currentUser = JSON.parse(localStorage.getItem('coffeehouse_user')) || {};
+        currentUser = safeStorageGet('coffeehouse_user', {});
     }
 
     const profileNameInput = document.getElementById('profileName');
@@ -181,11 +201,11 @@ function resetProfileForm() {
     const profilePhoneInput = document.getElementById('profilePhone');
     const profileBioInput = document.getElementById('profileBio');
 
-    if (profileNameInput) profileNameInput.value = currentUser.name || '';
-    if (profileUsernameInput) profileUsernameInput.value = currentUser.username || '';
-    if (profileEmailInput) profileEmailInput.value = currentUser.email || '';
-    if (profilePhoneInput) profilePhoneInput.value = currentUser.phone || '';
-    if (profileBioInput) profileBioInput.value = currentUser.bio || '';
+    if (profileNameInput) profileNameInput.value = sanitizeInput(currentUser.name || '');
+    if (profileUsernameInput) profileUsernameInput.value = sanitizeInput(currentUser.username || '');
+    if (profileEmailInput) profileEmailInput.value = sanitizeInput(currentUser.email || '');
+    if (profilePhoneInput) profilePhoneInput.value = sanitizeInput(currentUser.phone || '');
+    if (profileBioInput) profileBioInput.value = sanitizeInput(currentUser.bio || '');
 }
 
 // ============================================================================

@@ -77,56 +77,73 @@
 
 <body>
     <div class="auth-container">
-        <a href="index.html" class="back-to-home">
-            <i class="fas fa-arrow-left me-2"></i>Back to Home
+        <a href="index.html" class="back-to-home" aria-label="Back to home page">
+            <i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Back to Home
         </a>
 
         <div class="auth-card">
             <div class="auth-header">
-                <i class="fas fa-coffee fa-3x mb-3"></i>
+                <i class="fas fa-coffee fa-3x mb-3" aria-hidden="true"></i>
                 <h2>Welcome Back</h2>
                 <p class="mb-0">Login to your CoffeeHouse account</p>
             </div>
 
             <div class="auth-body">
-                <form id="loginForm">
+                <form id="loginForm" novalidate aria-label="Login form">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Address</label>
                         <div class="input-group">
-                            <span class="input-group-text">
+                            <span class="input-group-text" aria-hidden="true">
                                 <i class="fas fa-envelope"></i>
                             </span>
-                            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email" required
+                                aria-describedby="emailHelp" autocomplete="email">
                         </div>
+                        <small id="emailHelp" class="form-text text-muted">
+                            We'll never share your email with anyone else.
+                        </small>
                     </div>
 
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <div class="input-group">
-                            <span class="input-group-text">
+                            <span class="input-group-text" aria-hidden="true">
                                 <i class="fas fa-lock"></i>
                             </span>
                             <input type="password" class="form-control" id="password" placeholder="Enter your password"
-                                required>
+                                required aria-describedby="passwordHelp" autocomplete="current-password">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword"
+                                aria-label="Toggle password visibility">
+                                <i class="fas fa-eye" id="passwordIcon" aria-hidden="true"></i>
+                            </button>
                         </div>
+                        <small id="passwordHelp" class="form-text text-muted">
+                            <a href="#" class="text-primary">Forgot password?</a>
+                        </small>
                     </div>
 
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="remember">
+                        <input type="checkbox" class="form-check-input" id="remember" aria-describedby="rememberHelp">
                         <label class="form-check-label" for="remember">
                             Remember me
                         </label>
+                        <small id="rememberHelp" class="form-text text-muted">
+                            Stay logged in on this device
+                        </small>
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-auth btn-primary">
-                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        <button type="submit" class="btn btn-auth btn-primary" aria-label="Sign in to your account">
+                            <i class="fas fa-sign-in-alt me-2" aria-hidden="true"></i>Login
                         </button>
                     </div>
 
                     <div class="text-center mt-3">
-                        <p class="mb-0">Don't have an account? <a href="register.html" class="text-primary">Register
-                                here</a></p>
+                        <p class="mb-0">Don't have an account?
+                            <a href="register.html" class="text-primary" aria-label="Create a new account">
+                                Register here
+                            </a>
+                        </p>
                     </div>
                 </form>
             </div>

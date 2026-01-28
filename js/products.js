@@ -19,29 +19,32 @@ const allProducts = [
         badge: 'New',
         rating: 4.8,
         reviews: 127,
-        description: 'Bright, fruity notes with wine-like acidity from Ethiopian highlands'
+        description: 'Bright, fruity notes with wine-like acidity from Ethiopian highlands',
+        features: ['Fruity notes', 'Wine-like acidity', 'Ethiopian highlands', 'Light roast']
     },
     {
         id: 'colombian-blend',
         title: 'Colombian Medium Blend',
         price: 18.99,
-        image: 'https://b.zmtcdn.com/data/pictures/chains/8/18630948/149f4d2fc28da147452d5db105d17905.png',
+        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop',
         category: 'blends',
         badge: 'Popular',
         rating: 4.6,
         reviews: 89,
-        description: 'Well-balanced medium roast with nutty and chocolate notes'
+        description: 'Well-balanced medium roast with nutty and chocolate notes',
+        features: ['Medium roast', 'Nutty notes', 'Chocolate flavor', 'Well-balanced']
     },
     {
         id: 'espresso-roast',
         title: 'Italian Espresso Roast',
         price: 22.99,
-        image: 'https://cloudassets.starbucks.com/is/image/sbuxcorp/SBX20211210_CaramelRibbonCrunchFrapp?impolicy=1by1_tight_288&crop=495,495,810,810&wid=288&hei=288&qlt=85',
+        image: 'https://images.deliveryhero.io/image/fd-kh/LH/cnia-listing.jpg',
         category: 'espresso',
         badge: 'Hot',
         rating: 4.7,
         reviews: 234,
-        description: 'Dark Italian roast perfect for espresso machines'
+        description: 'Dark Italian roast perfect for espresso machines',
+        features: ['Dark roast', 'Espresso perfect', 'Italian style', 'Rich flavor']
     },
     {
         id: 'decaf-house-blend',
@@ -52,29 +55,32 @@ const allProducts = [
         badge: 'Sale',
         rating: 4.5,
         reviews: 156,
-        description: 'Swiss water decaffeinated process preserves flavor'
+        description: 'Swiss water decaffeinated process preserves flavor',
+        features: ['Decaffeinated', 'Swiss water process', 'Flavor preserved', 'Smooth taste']
     },
     {
         id: 'organic-peru',
         title: 'Organic Peru Single Origin',
         price: 26.99,
-        image: 'https://huupa.coffee/cdn/shop/articles/granos_de_cafe-792033_a69513e8-8fb8-4a3b-9890-c66d4fb70f59.jpg?v=1742927345',
+        image: 'https://un-caffe.com/cdn/shop/files/image_13.jpg?v=1698174491&width=900',
         category: 'organic',
         badge: 'Premium',
         rating: 4.9,
         reviews: 67,
-        description: 'Certified organic with smooth, mild flavor profile'
+        description: 'Certified organic with smooth, mild flavor profile',
+        features: ['Certified organic', 'Smooth flavor', 'Mild profile', 'Peru origin']
     },
     {
         id: 'guatemalan-antigua',
         title: 'Guatemalan Antigua',
         price: 21.99,
-        image: 'https://www.cafeorigenselecto.com/wp-content/uploads/2023/01/1020x576-Cafe-Origen-Selecto-1.jpg',
+        image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop',
         category: 'single-origin',
         badge: 'Limited',
         rating: 4.8,
         reviews: 45,
-        description: 'Volcanic soil creates rich, complex flavor with spicy notes'
+        description: 'Volcanic soil creates rich, complex flavor with spicy notes',
+        features: ['Volcanic soil', 'Complex flavor', 'Spicy notes', 'Limited edition']
     },
     {
         id: 'breakfast-blend',
@@ -85,40 +91,44 @@ const allProducts = [
         badge: 'Trending',
         rating: 4.4,
         reviews: 89,
-        description: 'Smooth morning blend with caramel and vanilla undertones'
+        description: 'Smooth morning blend with caramel and vanilla undertones',
+        features: ['Morning blend', 'Caramel notes', 'Vanilla undertones', 'Smooth taste']
     },
     {
         id: 'french-roast-dark',
         title: 'French Roast Dark',
         price: 19.99,
-        image: 'https://i.pinimg.com/474x/1c/58/ff/1c58ffd559a24b3bdb951bdb5aafcd7c.jpg',
+        image: 'https://cdn.shopify.com/s/files/1/1083/2612/files/coffee13_480x480.jpg?v=1717389103',
         category: 'espresso',
         badge: 'Pro',
         rating: 4.6,
         reviews: 112,
-        description: 'Bold, smoky flavor perfect for French press brewing'
+        description: 'Bold, smoky flavor perfect for French press brewing',
+        features: ['Bold flavor', 'Smoky notes', 'French press', 'Dark roast']
     },
     {
         id: 'sumatra-mandheling',
         title: 'Sumatra Mandheling',
         price: 23.99,
-        image: 'https://www.taylorlane.com/cdn/shop/articles/Is-Coffee-A-Vegetable_03559fea-ee85-46e9-8caa-be4a36807637_1000x.jpg?v=1756337156',
+        image: 'https://static.vecteezy.com/system/resources/thumbnails/023/513/850/small/hot-coffee-cup-with-coffee-beans-wallpaper-coffee-photo.jpg',
         category: 'single-origin',
         badge: 'Rare',
         rating: 4.8,
         reviews: 78,
-        description: 'Earthy, herbal notes with full body and low acidity'
+        description: 'Earthy, herbal notes with full body and low acidity',
+        features: ['Earthy notes', 'Herbal flavor', 'Full body', 'Low acidity']
     },
     {
         id: 'house-decaf-organic',
         title: 'House Organic Decaf',
         price: 18.99,
-        image: 'https://png.pngtree.com/thumb_back/fh260/background/20241127/pngtree-coffee-beans-splash-into-a-steaming-cup-creating-a-dynamic-image-image_16657212.jpg',
+        image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop',
         category: 'decaf',
         badge: 'Exclusive',
         rating: 5.0,
         reviews: 23,
-        description: 'Organic decaffeinated blend with bright, clean taste'
+        description: 'Organic decaffeinated blend with bright, clean taste',
+        features: ['Organic decaf', 'Bright taste', 'Clean flavor', 'Exclusive blend']
     }
 ];
 
@@ -147,6 +157,13 @@ const loadMoreBtn = document.getElementById('loadMoreBtn');
 const filterButtons = document.querySelectorAll('[data-filter]');
 const cartDropdown = document.getElementById('cartDropdown');
 const cartBtn = document.getElementById('cartBtn');
+const productCount = document.getElementById('productCount');
+const totalProducts = document.getElementById('totalProducts');
+const gridViewBtn = document.getElementById('gridViewBtn');
+const listViewBtn = document.getElementById('listViewBtn');
+
+// View state
+let currentView = 'grid'; // 'grid' or 'list'
 
 // ============================================================================
 // PRODUCT RENDERING FUNCTIONS
@@ -160,13 +177,15 @@ const cartBtn = document.getElementById('cartBtn');
  */
 function createProductCard(product) {
     const isInWishlist = wishlist.includes(product.id);
+    const cardClass = currentView === 'list' ? 'col-12' : 'col-lg-4 col-md-6 mb-4';
+
     return `
-        <div class="col-lg-4 col-md-6 mb-4 product-item" data-category="${product.category}">
-            <div class="product-card" data-product-id="${product.id}">
+        <div class="${cardClass} product-item" data-category="${product.category}">
+            <div class="product-card ${currentView === 'list' ? 'product-card-list' : ''}" data-product-id="${product.id}">
                 <div class="product-image">
-                    <img src="${product.image}" alt="${product.title}">
-                    ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                
+                    <img src="${product.image}" alt="${product.title}" loading="lazy">
+                    ${product.badge ? `<span class="product-badge badge-${product.badge.toLowerCase()}">${product.badge}</span>` : ''}
+                    
                     <div class="product-overlay">
                         <button class="quick-view-btn" onclick="showQuickView('${product.id}')">
                             <i class="bi bi-eye me-2"></i>Quick View
@@ -178,11 +197,27 @@ function createProductCard(product) {
                     <p class="text-muted small">${product.description}</p>
                     <div class="product-rating mb-2">
                         ${generateStars(product.rating)}
-                        <small class="text-muted">(${product.reviews} reviews)</small>
+                        <span class="text-muted small">(${product.reviews} reviews)</span>
                     </div>
-                    <div class="product-price">${CoffeeHouse.formatCurrency(product.price)}</div>
-                    <button class="btn btn-add-cart" onclick="CoffeeHouse.addToCart('${product.id}')">
-                        <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                    <div class="product-price mb-3">
+                        <span class="h4 text-primary fw-bold">$${product.price}</span>
+                    </div>
+                    ${product.features ? `
+                        <div class="product-features mb-3">
+                            ${product.features.slice(0, 2).map(feature =>
+        `<span class="feature-tag">${feature}</span>`
+    ).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="product-actions">
+                        <button class="btn btn-primary btn-sm w-100" onclick="addToCart('${product.id}')">
+                            <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm w-100 mt-2" onclick="toggleWishlist('${product.id}')">
+                            <i class="bi ${isInWishlist ? 'bi-heart-fill' : 'bi-heart'}"></i>
+                            ${isInWishlist ? 'In Wishlist' : 'Add to Wishlist'}
+                        </button>
+                    </div>
                     </button>
                 </div>
             </div>
@@ -317,10 +352,10 @@ function sortProducts(sortBy) {
 }
 
 /**
- * Search products with autocomplete
+ * Search products with autocomplete and input sanitization
  */
 function searchProducts(query) {
-    const searchTerm = query.toLowerCase().trim();
+    const searchTerm = sanitizeInput(query.toLowerCase().trim());
 
     if (!searchTerm) {
         currentProducts = [...allProducts];
@@ -343,17 +378,26 @@ function searchProducts(query) {
     // Show message if no results
     if (currentProducts.length === 0) {
         productsGrid.innerHTML = `
-            <div class="col-12 text-center py-5">
-                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <div class="col-12 text-center py-5" role="status" aria-live="polite">
+                <i class="fas fa-search fa-3x text-muted mb-3" aria-hidden="true"></i>
                 <h4>No products found</h4>
                 <p class="text-muted">Try searching with different keywords</p>
+                <button class="btn btn-outline-primary mt-3" onclick="clearSearch()">
+                    <i class="fas fa-times me-2" aria-hidden="true"></i>Clear Search
+                </button>
             </div>
         `;
+
+        // Announce to screen readers
+        announceToScreenReader(`No products found for "${searchTerm}"`);
+    } else {
+        // Announce search results to screen readers
+        announceToScreenReader(`Found ${currentProducts.length} products for "${searchTerm}"`);
     }
 }
 
 /**
- * Show search autocomplete results
+ * Show search autocomplete results with accessibility
  */
 function showSearchResults(query) {
     if (!searchResults) return;
@@ -364,19 +408,32 @@ function showSearchResults(query) {
     ).slice(0, 5);
 
     if (matches.length > 0) {
-        searchResults.innerHTML = matches.map(product => `
-            <div class="search-result-item" onclick="selectSearchResult('${product.id}')">
-                <img src="${product.image}" alt="${product.title}">
+        searchResults.innerHTML = matches.map((product, index) => `
+            <div class="search-result-item" 
+                 role="option" 
+                 tabindex="0"
+                 aria-selected="false"
+                 data-product-id="${product.id}"
+                 onclick="selectSearchResult('${product.id}')"
+                 onkeydown="handleSearchResultKeydown(event, '${product.id}')">
+                <img src="${product.image}" alt="${sanitizeInput(product.title)}" aria-hidden="true">
                 <div class="search-result-info">
-                    <h4>${product.title}</h4>
-                    <p>${product.description}</p>
-                </div>
-                <div class="ms-auto">
-                    <strong>${CoffeeHouse.formatCurrency(product.price)}</strong>
+                    <h4>${sanitizeInput(product.title)}</h4>
+                    <p>${sanitizeInput(product.description.substring(0, 100))}...</p>
+                    <div class="search-result-price">${CoffeeHouse.formatCurrency(product.price)}</div>
                 </div>
             </div>
         `).join('');
+
         searchResults.classList.add('active');
+        searchResults.setAttribute('role', 'listbox');
+        searchResults.setAttribute('aria-label', 'Search results');
+
+        // Focus first result for keyboard navigation
+        const firstResult = searchResults.querySelector('.search-result-item');
+        if (firstResult) {
+            setTimeout(() => firstResult.focus(), 100);
+        }
     } else {
         hideSearchResults();
     }
@@ -397,10 +454,78 @@ function hideSearchResults() {
 function selectSearchResult(productId) {
     const product = allProducts.find(p => p.id === productId);
     if (product) {
-        searchInput.value = product.title;
+        searchInput.value = sanitizeInput(product.title);
         hideSearchResults();
         searchProducts(product.title);
+
+        // Return focus to search input
+        searchInput.focus();
     }
+}
+
+/**
+ * Handle keyboard navigation for search results
+ */
+function handleSearchResultKeydown(event, productId) {
+    const results = Array.from(searchResults.querySelectorAll('.search-result-item'));
+    const currentIndex = results.findIndex(item => item.dataset.productId === productId);
+
+    switch (event.key) {
+        case 'Enter':
+        case ' ':
+            event.preventDefault();
+            selectSearchResult(productId);
+            break;
+        case 'ArrowDown':
+            event.preventDefault();
+            if (currentIndex < results.length - 1) {
+                results[currentIndex + 1].focus();
+            }
+            break;
+        case 'ArrowUp':
+            event.preventDefault();
+            if (currentIndex > 0) {
+                results[currentIndex - 1].focus();
+            } else {
+                searchInput.focus();
+            }
+            break;
+        case 'Escape':
+            event.preventDefault();
+            hideSearchResults();
+            searchInput.focus();
+            break;
+    }
+}
+
+/**
+ * Clear search and reset results
+ */
+function clearSearch() {
+    searchInput.value = '';
+    hideSearchResults();
+    searchProducts('');
+    searchInput.focus();
+}
+
+/**
+ * Announce message to screen readers
+ */
+function announceToScreenReader(message) {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+
+    document.body.appendChild(announcement);
+
+    // Remove after announcement
+    setTimeout(() => {
+        if (announcement.parentNode) {
+            announcement.parentNode.removeChild(announcement);
+        }
+    }, 1000);
 }
 
 /**
@@ -417,7 +542,7 @@ function updateFilterButtons(activeCategory) {
 }
 
 // =============================================================================
-// WISHLIST FUNCTIONALITY
+// WISHLIST FEATURES
 // =============================================================================
 
 /**
@@ -441,7 +566,7 @@ function toggleWishlist(productId) {
 }
 
 // =============================================================================
-// QUICK VIEW FUNCTIONALITY
+// QUICK VIEW FEATURES
 // =============================================================================
 
 /**
@@ -514,7 +639,7 @@ function getProductFeatures(product) {
 }
 
 // =============================================================================
-// CART DROPDOWN FUNCTIONALITY
+// CART DROPDOWN FEATURES
 // =============================================================================
 
 /**
@@ -579,14 +704,14 @@ function generateSkeletonCards(count) {
 }
 
 // =============================================================================
-// COMPARISON FUNCTIONALITY
+// COMPARE FEATURES
 // =============================================================================
 
 /**
  * Add product to comparison
  */
 function compareProduct(productId) {
-    // This is a placeholder for comparison functionality
+    // This is a placeholder for compare feature
     const product = allProducts.find(p => p.id === productId);
     CoffeeHouse.showToast(`Comparison feature coming soon for ${product.title}`, 'info');
 }
@@ -614,11 +739,11 @@ function setupEventListeners() {
         });
     }
 
-    // Search functionality with autocomplete
+    // Search feature with autocomplete and easy access
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
-            const query = e.target.value;
+            const query = sanitizeInput(e.target.value);
 
             if (query.length > 0) {
                 searchTimeout = setTimeout(() => {
@@ -632,8 +757,21 @@ function setupEventListeners() {
 
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
+                e.preventDefault();
                 hideSearchResults();
                 searchProducts(e.target.value);
+            }
+        });
+
+        // Enhanced keyboard navigation for search
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' && searchResults.classList.contains('active')) {
+                e.preventDefault();
+                const firstResult = searchResults.querySelector('.search-result-item');
+                if (firstResult) firstResult.focus();
+            }
+            if (e.key === 'Escape') {
+                hideSearchResults();
             }
         });
 
@@ -647,8 +785,17 @@ function setupEventListeners() {
 
     if (searchBtn) {
         searchBtn.addEventListener('click', () => {
+            const query = sanitizeInput(searchInput.value);
             hideSearchResults();
-            searchProducts(searchInput.value);
+            searchProducts(query);
+        });
+
+        // Keyboard support for search button
+        searchBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                searchBtn.click();
+            }
         });
     }
 

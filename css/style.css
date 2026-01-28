@@ -290,16 +290,64 @@ html {
 
 .product-badge {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background: var(--danger-color);
-    color: white;
-    padding: 5px 15px;
-    border-radius: 25px;
-    font-size: 0.8rem;
+    top: 10px;
+    right: 10px;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    z-index: 1;
+}
+
+.badge-new {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.badge-popular {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+}
+
+.badge-hot {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.badge-sale {
+    background: linear-gradient(135deg, #fd7e14, #e0a800);
+    color: white;
+}
+
+.badge-premium {
+    background: linear-gradient(135deg, #6f42c1, #5a32a3);
+    color: white;
+}
+
+.badge-limited {
+    background: linear-gradient(135deg, #e83e8c, #d63384);
+    color: white;
+}
+
+.badge-trending {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+}
+
+.badge-pro {
+    background: linear-gradient(135deg, #343a40, #212529);
+    color: white;
+}
+
+.badge-rare {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #212529;
+}
+
+.badge-exclusive {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
 }
 
 .product-body {
@@ -610,6 +658,202 @@ html {
 }
 
 /* ============================================================================
+   ACCOUNT DROPDOWN - Enhanced User Menu
+   ============================================================================ */
+
+.account-dropdown {
+    position: relative;
+}
+
+.account-dropdown .dropdown-menu.account-menu {
+    min-width: 280px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 0;
+    margin-top: 0.5rem;
+    overflow: hidden;
+    animation: dropdownSlide 0.3s ease-out;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: auto;
+    z-index: 1000;
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.account-dropdown .dropdown-header {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 1rem;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+}
+
+.account-dropdown .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.account-dropdown .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.account-dropdown .user-details {
+    flex: 1;
+}
+
+.account-dropdown .user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.1rem;
+    color: white;
+}
+
+.account-dropdown .user-email {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    color: white;
+}
+
+/* Menu Items */
+.account-dropdown .dropdown-item {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+.account-dropdown .dropdown-item:hover {
+    background: var(--light-color);
+    color: var(--primary-color);
+}
+
+.account-dropdown .dropdown-item:focus {
+    background: var(--light-color);
+    color: var(--primary-color);
+    outline: 2px solid var(--primary-color);
+    outline-offset: -2px;
+}
+
+.account-dropdown .dropdown-item i {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.account-dropdown .dropdown-item:hover i {
+    color: var(--primary-color);
+}
+
+/* Menu Item Content */
+.account-dropdown .dropdown-item span {
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 0.1rem;
+}
+
+.account-dropdown .dropdown-item small {
+    font-size: 0.7rem;
+    font-weight: 400;
+    line-height: 1.2;
+    display: block;
+    opacity: 0.7;
+}
+
+/* Divider */
+.account-dropdown .dropdown-divider {
+    margin: 0;
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Dropdown Toggle Button */
+.account-dropdown .dropdown-toggle {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+.account-dropdown .dropdown-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.account-dropdown .dropdown-toggle:focus {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.account-dropdown .dropdown-menu.account-menu.show {
+    display: block;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .account-dropdown .dropdown-menu.account-menu {
+        min-width: 260px;
+        right: -10px;
+    }
+
+    .account-dropdown .user-info {
+        gap: 0.5rem;
+    }
+
+    .account-dropdown .user-avatar {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+
+    .account-dropdown .user-name {
+        font-size: 0.8rem;
+    }
+
+    .account-dropdown .user-email {
+        font-size: 0.7rem;
+    }
+
+    .account-dropdown .dropdown-item {
+        padding: 0.6rem 0.8rem;
+    }
+
+    .account-dropdown .dropdown-item span {
+        font-size: 0.8rem;
+    }
+
+    .account-dropdown .dropdown-item small {
+        font-size: 0.65rem;
+    }
+}
+
+/* ============================================================================
    CART DROPDOWN - Shopping Cart Display
    ============================================================================ */
 
@@ -753,7 +997,6 @@ html {
     align-items: center;
     justify-content: center;
     transition: var(--transition-fast);
-    font-size: 0.9rem;
 }
 
 .btn-remove-item:hover {
@@ -1173,5 +1416,219 @@ html {
 
     .profile-form-actions button {
         width: 100%;
+    }
+}
+
+/* Coffee Journey Section Styles */
+.journey-content {
+    padding: 2rem 0;
+}
+
+.journey-step {
+    position: relative;
+    padding-left: 3rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInLeft 0.6s ease forwards;
+}
+
+.journey-step:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.journey-step:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.journey-step:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.journey-step:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+@keyframes slideInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.step-number {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-shadow: 0 4px 15px rgba(67, 56, 202, 0.3);
+    transition: var(--transition-smooth);
+}
+
+.journey-step:hover .step-number {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(67, 56, 202, 0.4);
+}
+
+.journey-step h5 {
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    transition: var(--transition-fast);
+}
+
+.journey-step:hover h5 {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.journey-step p {
+    margin-bottom: 0;
+    line-height: 1.6;
+}
+
+.journey-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transition: var(--transition-smooth);
+}
+
+.journey-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.journey-image img {
+    width: 100%;
+    height: auto;
+    transition: var(--transition-smooth);
+}
+
+.journey-image:hover img {
+    transform: scale(1.05);
+}
+
+.journey-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: fadeInDown 0.8s ease 0.6s both;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments for Coffee Journey */
+@media (max-width: 768px) {
+    .journey-content {
+        padding: 1rem 0;
+    }
+
+    .journey-step {
+        padding-left: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .step-number {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.9rem;
+    }
+
+    .journey-step h5 {
+        font-size: 1.1rem;
+    }
+
+    .journey-badge {
+        top: 1rem;
+        right: 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Coffee Expertise Section Styles */
+.expertise-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    transition: var(--transition-smooth);
+    border: 2px solid transparent;
+}
+
+.expertise-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
+}
+
+.expertise-icon {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.expertise-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.expertise-list li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.expertise-list li i {
+    color: var(--success-color);
+    margin-right: 0.5rem;
+}
+
+/* Responsive adjustments for Coffee Expertise */
+@media (max-width: 768px) {
+    .expertise-card {
+        padding: 1.5rem;
+    }
+
+    .expertise-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .expertise-list li {
+        font-size: 0.85rem;
     }
 }

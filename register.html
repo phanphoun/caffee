@@ -96,80 +96,112 @@
 
 <body>
     <div class="auth-container">
-        <a href="index.html" class="back-to-home">
-            <i class="fas fa-arrow-left me-2"></i>Back to Home
+        <a href="index.html" class="back-to-home" aria-label="Back to home page">
+            <i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Back to Home
         </a>
 
         <div class="auth-card">
             <div class="auth-header">
-                <i class="fas fa-coffee fa-3x mb-3"></i>
+                <i class="fas fa-coffee fa-3x mb-3" aria-hidden="true"></i>
                 <h2>Create Account</h2>
                 <p class="mb-0">Join CoffeeHouse today</p>
             </div>
 
             <div class="auth-body">
-                <form id="registerForm">
+                <form id="registerForm" novalidate aria-label="Registration form">
                     <div class="mb-3">
                         <label for="fullName" class="form-label">Full Name</label>
                         <div class="input-group">
-                            <span class="input-group-text">
+                            <span class="input-group-text" aria-hidden="true">
                                 <i class="fas fa-user"></i>
                             </span>
                             <input type="text" class="form-control" id="fullName" placeholder="Enter your full name"
-                                required>
+                                required aria-describedby="nameHelp" autocomplete="name">
                         </div>
+                        <small id="nameHelp" class="form-text text-muted">
+                            Your name as it should appear on orders
+                        </small>
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Address</label>
                         <div class="input-group">
-                            <span class="input-group-text">
+                            <span class="input-group-text" aria-hidden="true">
                                 <i class="fas fa-envelope"></i>
                             </span>
-                            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email" required
+                                aria-describedby="emailHelp" autocomplete="email">
                         </div>
+                        <small id="emailHelp" class="form-text text-muted">
+                            We'll never share your email with anyone else.
+                        </small>
                     </div>
 
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <div class="input-group">
-                            <span class="input-group-text">
+                            <span class="input-group-text" aria-hidden="true">
                                 <i class="fas fa-lock"></i>
                             </span>
                             <input type="password" class="form-control" id="password" placeholder="Create a password"
-                                required>
+                                required aria-describedby="passwordHelp passwordStrength" autocomplete="new-password">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword"
+                                aria-label="Toggle password visibility">
+                                <i class="fas fa-eye" id="passwordIcon" aria-hidden="true"></i>
+                            </button>
                         </div>
-                        <div class="password-strength" id="passwordStrength"></div>
-                        <small class="text-muted">Password must be at least 8 characters long</small>
+                        <div class="password-strength" id="passwordStrength" role="progressbar"
+                            aria-label="Password strength indicator" aria-valuenow="0" aria-valuemin="0"
+                            aria-valuemax="6"></div>
+                        <small id="passwordHelp" class="form-text text-muted">
+                            Use 8+ characters with uppercase, numbers, and symbols
+                        </small>
                     </div>
 
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
                         <div class="input-group">
-                            <span class="input-group-text">
+                            <span class="input-group-text" aria-hidden="true">
                                 <i class="fas fa-lock"></i>
                             </span>
                             <input type="password" class="form-control" id="confirmPassword"
-                                placeholder="Confirm your password" required>
+                                placeholder="Confirm your password" required aria-describedby="confirmPasswordHelp"
+                                autocomplete="new-password">
+                            <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword"
+                                aria-label="Toggle confirm password visibility">
+                                <i class="fas fa-eye" id="confirmPasswordIcon" aria-hidden="true"></i>
+                            </button>
                         </div>
+                        <small id="confirmPasswordHelp" class="form-text text-muted">
+                            Re-enter your password to confirm
+                        </small>
                     </div>
 
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="terms">
+                        <input type="checkbox" class="form-check-input" id="terms" aria-describedby="termsHelp"
+                            required>
                         <label class="form-check-label" for="terms">
-                            I agree to the <a href="#" class="text-primary">Terms and Conditions</a>
+                            I agree to the <a href="#" class="text-primary" aria-label="Read terms and conditions">Terms
+                                and Conditions</a>
                         </label>
+                        <small id="termsHelp" class="form-text text-muted">
+                            Required to create your account
+                        </small>
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-auth btn-primary">
-                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        <button type="submit" class="btn btn-auth btn-primary"
+                            aria-label="Create your CoffeeHouse account">
+                            <i class="fas fa-user-plus me-2" aria-hidden="true"></i>Create Account
                         </button>
                     </div>
 
                     <div class="text-center mt-3">
-                        <p class="mb-0">Already have an account? <a href="login.html" class="text-primary">Login
-                                here</a></p>
+                        <p class="mb-0">Already have an account?
+                            <a href="login.html" class="text-primary" aria-label="Sign in to existing account">
+                                Login here
+                            </a>
+                        </p>
                     </div>
                 </form>
             </div>

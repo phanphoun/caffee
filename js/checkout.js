@@ -48,10 +48,10 @@ function initializeCheckout() {
 }
 
 /**
- * Load cart items from localStorage and display
+ * Load cart items from localStorage using secure storage and display
  */
 function loadCartItems() {
-    cartItems = JSON.parse(localStorage.getItem('coffeehouse_cart')) || [];
+    cartItems = safeStorageGet('coffeehouse_cart', []);
     const cartItemsContainer = document.getElementById('checkoutCartItems');
 
     if (cartItems.length === 0) {
@@ -70,9 +70,9 @@ function loadCartItems() {
 
     cartItemsContainer.innerHTML = cartItems.map(item => `
         <div class="cart-item-checkout">
-            <img src="${item.image}" alt="${item.title}">
+            <img src="${item.image}" alt="${sanitizeInput(item.title)}">
             <div class="cart-item-details">
-                <div class="cart-item-name">${item.title}</div>
+                <div class="cart-item-name">${sanitizeInput(item.title)}</div>
                 <div class="cart-item-details-row">
                     <span>Qty: <strong>${item.qty}</strong></span>
                     <span>${CoffeeHouse.formatCurrency(item.price)} each</span>
@@ -129,14 +129,24 @@ function calculateTotals() {
 }
 
 /**
- * Apply promo code to order
+ * Apply promo code to order with input sanitization
  */
 function applyPromoCode() {
-    const promoCode = document.getElementById('promoCode').value.toUpperCase().trim();
+    const promoCodeInput = document.getElementById('promoCode');
+    const promoCode = sanitizeInput(promoCodeInput.value.toUpperCase());
     const promoMessage = document.getElementById('promoMessage');
 
     if (!promoCode) {
         promoMessage.textContent = '';
+        discountPercentage = 0;
+        calculateTotals();
+        return;
+    }
+
+    // Validate promo code format (alphanumeric only)
+    if (!/^[A-Z0-9]+$/.test(promoCode)) {
+        promoMessage.textContent = 'Invalid promo code format';
+        promoMessage.className = 'text-danger';
         discountPercentage = 0;
         calculateTotals();
         return;
@@ -215,7 +225,7 @@ function setupEventListeners() {
 }
 
 /**
- * Handle checkout form submission
+ * Handle checkout form submission with input sanitization and validation
  */
 function handleCheckoutSubmit(event) {
     event.preventDefault();
@@ -232,16 +242,16 @@ function handleCheckoutSubmit(event) {
     const tax = subtotalAfterDiscount * taxRate;
     const total = subtotalAfterDiscount + shippingCost + tax;
 
-    // Get form data
+    // Get and sanitize form data
     const formData = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        address: document.getElementById('address').value,
-        city: document.getElementById('city').value,
-        zipCode: document.getElementById('zipCode').value,
-        country: document.getElementById('country').value,
+        firstName: sanitizeInput(document.getElementById('firstName').value),
+        lastName: sanitizeInput(document.getElementById('lastName').value),
+        email: sanitizeInput(document.getElementById('email').value),
+        phone: sanitizeInput(document.getElementById('phone').value),
+        address: sanitizeInput(document.getElementById('address').value),
+        city: sanitizeInput(document.getElementById('city').value),
+        zipCode: sanitizeInput(document.getElementById('zipCode').value),
+        country: sanitizeInput(document.getElementById('country').value),
         paymentMethod: selectedPaymentMethod,
         cart: cartItems,
         subtotal: CoffeeHouse.formatCurrency(subtotal),
@@ -257,14 +267,16 @@ function handleCheckoutSubmit(event) {
 }
 
 /**
- * Validate checkout form
+ * Validate checkout form with enhanced validation
  */
 function validateCheckoutForm() {
     const required = ['firstName', 'lastName', 'email', 'address', 'city', 'zipCode', 'country'];
 
     for (let field of required) {
         const element = document.getElementById(field);
-        if (!element.value.trim()) {
+        const value = sanitizeInput(element.value);
+
+        if (!value || value.length < 2) {
             element.classList.add('is-invalid');
             CoffeeHouse.showToast(`${field.replace(/([A-Z])/g, ' $1').trim()} is required`, 'error');
             element.focus();
@@ -275,11 +287,26 @@ function validateCheckoutForm() {
     }
 
     // Validate email
-    const email = document.getElementById('email').value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    const email = sanitizeInput(document.getElementById('email').value);
+    if (!isValidEmail(email)) {
         document.getElementById('email').classList.add('is-invalid');
         CoffeeHouse.showToast('Please enter a valid email address', 'error');
+        return false;
+    }
+
+    // Validate phone if provided
+    const phone = sanitizeInput(document.getElementById('phone').value);
+    if (phone && !isValidPhone(phone)) {
+        document.getElementById('phone').classList.add('is-invalid');
+        CoffeeHouse.showToast('Please enter a valid phone number', 'error');
+        return false;
+    }
+
+    // Validate zip code (basic validation)
+    const zipCode = sanitizeInput(document.getElementById('zipCode').value);
+    if (!/^\d{5}(-\d{4})?$/.test(zipCode)) {
+        document.getElementById('zipCode').classList.add('is-invalid');
+        CoffeeHouse.showToast('Please enter a valid ZIP code', 'error');
         return false;
     }
 
@@ -287,7 +314,7 @@ function validateCheckoutForm() {
 }
 
 /**
- * Process order (simulation)
+ * Process order with secure storage operations
  */
 function processOrder(orderData) {
     // Show loading state
@@ -302,25 +329,35 @@ function processOrder(orderData) {
         // Generate order ID
         const orderId = 'COF' + Date.now();
 
-        // Save order to localStorage (for order history)
-        const orders = JSON.parse(localStorage.getItem('coffeehouse_orders')) || [];
+        // Save order to localStorage using secure storage (for order history)
+        const orders = safeStorageGet('coffeehouse_orders', []);
         orders.push({
             ...orderData,
             orderId: orderId,
             status: 'confirmed'
         });
-        localStorage.setItem('coffeehouse_orders', JSON.stringify(orders));
 
-        // Clear cart
-        localStorage.removeItem('coffeehouse_cart');
+        if (safeStorageSet('coffeehouse_orders', orders)) {
+            // Clear cart using secure storage
+            if (safeStorageRemove('coffeehouse_cart')) {
+                // Show success message
+                CoffeeHouse.showToast('Order placed successfully! Order ID: ' + orderId, 'success');
 
-        // Show success message
-        CoffeeHouse.showToast('Order placed successfully! Order ID: ' + orderId, 'success');
-
-        // Redirect to order confirmation
-        setTimeout(() => {
-            window.location.href = `order-confirmation.html?order=${orderId}`;
-        }, 2000);
+                // Redirect to order confirmation
+                setTimeout(() => {
+                    window.location.href = `order-confirmation.html?order=${orderId}`;
+                }, 2000);
+            } else {
+                CoffeeHouse.showToast('Order placed but failed to clear cart', 'warning');
+                setTimeout(() => {
+                    window.location.href = `order-confirmation.html?order=${orderId}`;
+                }, 2000);
+            }
+        } else {
+            CoffeeHouse.showToast('Failed to save order. Please try again.', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
 
     }, 2000);
 }

@@ -39,28 +39,95 @@
                         <a class="nav-link" href="about.html">About</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="strategy.html">Strategy</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" href="contact.html">Contact</a>
                     </li>
                 </ul>
 
                 <div class="d-flex align-items-center ms-3">
-                    <div class="dropdown">
+                    <div class="account-dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" id="accountDropdown"
-                            data-bs-toggle="dropdown">
-                            <i class="bi bi-person-fill me-1"></i>
+                            data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account menu">
+                            <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
                             <span id="accountName">Account</span>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" id="loginBtn">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>Profile
-                                </a></li>
-                            <li>
-                                <a class="dropdown-item" href="login.html" id="registerBtn">
-                                    <i class="bi bi-person-plus me-2"></i>Logout
+                        <ul class="dropdown-menu account-menu" role="menu" aria-labelledby="accountDropdown">
+                            <!-- User Profile Section -->
+                            <li class="dropdown-header" id="userHeader" style="display:none;">
+                                <div class="user-info">
+                                    <div class="user-avatar">
+                                        <i class="bi bi-person-circle" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="user-name" id="headerUserName">Guest User</div>
+                                        <div class="user-email" id="headerUserEmail">Not logged in</div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!-- Menu Items for Logged In Users -->
+                            <li id="profileMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" id="loginBtn" role="menuitem">
+                                    <i class="bi bi-person me-2" aria-hidden="true"></i>
+                                    <span>My Profile</span>
+                                    <small class="text-muted">Manage your account</small>
                                 </a>
                             </li>
 
+                            <li id="ordersMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" role="menuitem">
+                                    <i class="bi bi-box-seam me-2" aria-hidden="true"></i>
+                                    <span>Order History</span>
+                                    <small class="text-muted">View your orders</small>
+                                </a>
+                            </li>
 
+                            <li id="wishlistMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" role="menuitem">
+                                    <i class="bi bi-heart me-2" aria-hidden="true"></i>
+                                    <span>Wishlist</span>
+                                    <small class="text-muted">Saved items</small>
+                                </a>
+                            </li>
+
+                            <li id="settingsMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" role="menuitem">
+                                    <i class="bi bi-gear me-2" aria-hidden="true"></i>
+                                    <span>Settings</span>
+                                    <small class="text-muted">Preferences</small>
+                                </a>
+                            </li>
+
+                            <li id="divider" style="display:none;">
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!-- Auth Items -->
+                            <li id="loginMenuItem">
+                                <a class="dropdown-item" href="login.html" role="menuitem">
+                                    <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>
+                                    <span>Sign In</span>
+                                    <small class="text-muted">Access your account</small>
+                                </a>
+                            </li>
+
+                            <li id="registerMenuItem">
+                                <a class="dropdown-item" href="register.html" role="menuitem">
+                                    <i class="bi bi-person-plus me-2" aria-hidden="true"></i>
+                                    <span>Create Account</span>
+                                    <small class="text-muted">Join CoffeeHouse</small>
+                                </a>
+                            </li>
+
+                            <li id="logoutMenuItem" style="display:none;">
+                                <a class="dropdown-item" href="#" id="logoutBtn" role="menuitem">
+                                    <i class="bi bi-box-arrow-left me-2" aria-hidden="true"></i>
+                                    <span>Sign Out</span>
+                                    <small class="text-muted">Log out of your account</small>
+                                </a>
+                            </li>
                         </ul>
                     </div>
 

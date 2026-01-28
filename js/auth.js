@@ -1,7 +1,7 @@
 /**
  * ============================================================================
- * Authentication System - CoffeeHouse
- * Handles user login, registration, validation, and session management
+ * Login System - CoffeeHouse
+ * Handles user login, registration, checks, and session management
  * ============================================================================
  */
 
@@ -11,19 +11,58 @@
 
 const AUTH_CONFIG = {
     STORAGE_KEYS: {
-        USER: 'watchstore_user',
-        REMEMBER: 'watchstore_remember'
+        USER: 'coffeehouse_user',
+        REMEMBER: 'coffeehouse_remember',
+        USERS: 'coffeehouse_users'
     },
     MIN_PASSWORD_LENGTH: 8,
     TOKEN_EXPIRY: 24 * 60 * 60 * 1000 // 24 hours
 };
 
 // ============================================================================
-// UTILITY FUNCTIONS - Notifications & Validation
+// HELPER FUNCTIONS - Notifications & Checks
 // ============================================================================
 
 /**
- * Display a toast notification message
+ * Sanitize user input to prevent XSS attacks
+ * @param {string} input - The user input to sanitize
+ * @returns {string} Sanitized input
+ */
+function sanitizeInput(input) {
+    if (typeof input !== 'string') return '';
+
+    return input.trim()
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/javascript:/gi, '')
+        .replace(/on\w+\s*=/gi, '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/["'<>]/g, '')
+        .substring(0, 500);
+}
+
+/**
+ * Show loading state on form submit button
+ * @param {HTMLButtonElement} button - The button to show loading on
+ * @param {string} loadingText - Text to display during loading
+ */
+function showLoadingState(button, loadingText = 'Processing...') {
+    button.dataset.originalText = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i>${loadingText}`;
+}
+
+/**
+ * Hide loading state and restore button
+ * @param {HTMLButtonElement} button - The button to restore
+ */
+function hideLoadingState(button) {
+    button.disabled = false;
+    button.innerHTML = button.dataset.originalText || 'Submit';
+    delete button.dataset.originalText;
+}
+
+/**
+ * Display a toast notification message with accessibility
  * Automatically hides after 3 seconds
  * @param {string} message - The message to display
  * @param {string} type - The notification type: 'success', 'error', 'warning', or 'info'
@@ -38,6 +77,8 @@ function showToast(message, type = 'success') {
     // Create toast element
     const toast = document.createElement('div');
     toast.className = `toast-notification toast-${type}`;
+    toast.setAttribute('role', 'alert');
+    toast.setAttribute('aria-live', 'polite');
 
     const icon = type === 'success' ? 'fa-check-circle' :
         type === 'error' ? 'fa-exclamation-circle' :
@@ -45,8 +86,8 @@ function showToast(message, type = 'success') {
 
     toast.innerHTML = `
         <div class="d-flex align-items-center">
-            <i class="fas ${icon} me-2"></i>
-            <span>${message}</span>
+            <i class="fas ${icon} me-2" aria-hidden="true"></i>
+            <span>${sanitizeInput(message)}</span>
         </div>
     `;
 
@@ -117,7 +158,90 @@ function checkPasswordStrength(password) {
 }
 
 /**
- * Update password strength indicator UI
+ * Setup password visibility toggle
+ * @param {string} buttonId - ID of the toggle button
+ * @param {string} inputId - ID of the password input
+ * @param {string} iconId - ID of the icon element
+ */
+function setupPasswordToggle(buttonId, inputId, iconId) {
+    const toggleBtn = document.getElementById(buttonId);
+    const passwordInput = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+
+    if (toggleBtn && passwordInput && icon) {
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+
+            // Update aria-label
+            toggleBtn.setAttribute('aria-label',
+                isPassword ? 'Hide password' : 'Show password'
+            );
+        });
+
+        // Keyboard support
+        toggleBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleBtn.click();
+            }
+        });
+    }
+}
+
+/**
+ * Setup live check feedback
+ */
+function setupRealtimeValidation() {
+    // Email check
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+        emailInput.addEventListener('blur', () => {
+            const email = sanitizeInput(emailInput.value.trim());
+            if (email && !isValidEmail(email)) {
+                showFieldError(emailInput, 'Please enter a valid email address');
+            } else {
+                clearFieldError(emailInput);
+            }
+        });
+    }
+
+    // Name check
+    const nameInput = document.getElementById('fullName');
+    if (nameInput) {
+        nameInput.addEventListener('blur', () => {
+            const name = sanitizeInput(nameInput.value.trim());
+            if (name && name.length < 2) {
+                showFieldError(nameInput, 'Name must be at least 2 characters');
+            } else {
+                clearFieldError(nameInput);
+            }
+        });
+    }
+
+    // Clear checks on input
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', () => {
+            clearFieldError(input);
+        });
+    });
+}
+
+/**
+ * Clear field error state
+ * @param {HTMLInputElement} field - The input field to clear error from
+ */
+function clearFieldError(field) {
+    field.classList.remove('is-invalid');
+    const errorDiv = field.parentNode.querySelector('.invalid-feedback');
+    if (errorDiv) {
+        errorDiv.remove();
+    }
+}
+
+/**
+ * Update password strength indicator with accessibility
  * Shows strength bar with visual feedback based on password quality
  * @param {string} password - The password to evaluate
  */
@@ -132,15 +256,20 @@ function updatePasswordStrength(password) {
 
     if (password.length === 0) {
         strengthBar.style.display = 'none';
+        strengthBar.setAttribute('aria-valuenow', '0');
     } else {
         strengthBar.style.display = 'block';
+        strengthBar.setAttribute('aria-valuenow', strength.toString());
 
         if (strength <= 2) {
             strengthBar.classList.add('strength-weak');
+            strengthBar.setAttribute('aria-label', 'Weak password');
         } else if (strength <= 4) {
             strengthBar.classList.add('strength-medium');
+            strengthBar.setAttribute('aria-label', 'Medium password strength');
         } else {
             strengthBar.classList.add('strength-strong');
+            strengthBar.setAttribute('aria-label', 'Strong password');
         }
     }
 }
@@ -168,7 +297,7 @@ function storeUser(userData, remember = false) {
 }
 
 /**
- * Generate a simple authentication token
+ * Generate a simple login token
  * @returns {string} Random token string
  */
 function generateToken() {
@@ -198,7 +327,7 @@ function isLoggedIn() {
     const user = getStoredUser();
     if (!user) return false;
 
-    // Check if token is still valid (simple implementation)
+    // Check if token is still good (simple check)
     const loginTime = new Date(user.loginTime);
     const now = new Date();
     const diff = now - loginTime;
@@ -229,53 +358,121 @@ function redirectIfLoggedIn() {
 }
 
 // =============================================================================
-// LOGIN FUNCTIONALITY
+// LOGIN FEATURES
 // =============================================================================
 
 /**
- * Handle login form submission
+ * Handle login form submission with enhanced security and UX
  */
 function handleLogin(event) {
     event.preventDefault();
 
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const remember = document.getElementById('remember').checked;
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const rememberInput = document.getElementById('remember');
+    const submitBtn = event.target.querySelector('button[type="submit"]');
 
-    // Validation
-    if (!email || !password) {
-        showToast('Please fill in all fields', 'error');
+    // Get and sanitize form values
+    const email = sanitizeInput(emailInput.value.trim());
+    const password = passwordInput.value; // Don't sanitize password
+    const remember = rememberInput.checked;
+
+    // Clear previous validation states
+    clearValidationStates();
+
+    // Checks with live feedback
+    let isValid = true;
+
+    if (!email) {
+        showFieldError(emailInput, 'Email is required');
+        isValid = false;
+    } else if (!isValidEmail(email)) {
+        showFieldError(emailInput, 'Please enter a valid email address');
+        isValid = false;
+    }
+
+    if (!password) {
+        showFieldError(passwordInput, 'Password is required');
+        isValid = false;
+    }
+
+    if (!isValid) {
         return;
     }
 
-    if (!isValidEmail(email)) {
-        showToast('Please enter a valid email address', 'error');
-        return;
+    // Show loading state
+    showLoadingState(submitBtn, 'Signing in...');
+
+    // Simulate login with delay for better UX
+    setTimeout(() => {
+        try {
+            // Simulate login (in real app, this would be an API call)
+            const users = getUsersFromStorage();
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                // Successful login
+                storeUser({
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role || 'customer'
+                }, remember);
+
+                showToast('Login successful! Redirecting...', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+
+            } else {
+                // Failed login
+                showToast('Invalid email or password', 'error');
+                showFieldError(passwordInput, 'Incorrect password');
+                hideLoadingState(submitBtn);
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            showToast('Login failed. Please try again.', 'error');
+            hideLoadingState(submitBtn);
+        }
+    }, 1000); // Simulate network delay
+}
+
+/**
+ * Show field error with visual feedback
+ * @param {HTMLInputElement} field - The input field to show error on
+ * @param {string} message - Error message to display
+ */
+function showFieldError(field, message) {
+    field.classList.add('is-invalid');
+
+    // Remove existing error message
+    const existingError = field.parentNode.querySelector('.invalid-feedback');
+    if (existingError) {
+        existingError.remove();
     }
 
-    // Simulate authentication (in real app, this would be an API call)
-    const users = getUsersFromStorage();
-    const user = users.find(u => u.email === email && u.password === password);
+    // Add error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'invalid-feedback';
+    errorDiv.textContent = message;
+    field.parentNode.appendChild(errorDiv);
 
-    if (user) {
-        // Successful login
-        storeUser({
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role || 'customer'
-        }, remember);
+    // Focus on the field
+    field.focus();
+}
 
-        showToast('Login successful! Redirecting...', 'success');
-
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
-
-    } else {
-        // Failed login
-        showToast('Invalid email or password', 'error');
-    }
+/**
+ * Clear all check states
+ */
+function clearValidationStates() {
+    document.querySelectorAll('.is-invalid').forEach(field => {
+        field.classList.remove('is-invalid');
+    });
+    document.querySelectorAll('.invalid-feedback').forEach(error => {
+        error.remove();
+    });
 }
 
 // =============================================================================
@@ -283,85 +480,129 @@ function handleLogin(event) {
 // =============================================================================
 
 /**
- * Handle registration form submission
+ * Handle registration form submission with enhanced validation
  */
 function handleRegister(event) {
     event.preventDefault();
 
-    const fullName = document.getElementById('fullName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const termsAccepted = document.getElementById('terms').checked;
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const termsInput = document.getElementById('terms');
+    const submitBtn = event.target.querySelector('button[type="submit"]');
 
-    // Validation
-    if (!fullName || !email || !password || !confirmPassword) {
-        showToast('Please fill in all fields', 'error');
-        return;
+    // Get and sanitize form values
+    const fullName = sanitizeInput(fullNameInput.value.trim());
+    const email = sanitizeInput(emailInput.value.trim());
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    const termsAccepted = termsInput.checked;
+
+    // Clear previous validation states
+    clearValidationStates();
+
+    // Enhanced validation with real-time feedback
+    let isValid = true;
+
+    if (!fullName || fullName.length < 2) {
+        showFieldError(fullNameInput, 'Please enter your full name (at least 2 characters)');
+        isValid = false;
     }
 
-    if (!isValidEmail(email)) {
-        showToast('Please enter a valid email address', 'error');
-        return;
+    if (!email) {
+        showFieldError(emailInput, 'Email is required');
+        isValid = false;
+    } else if (!isValidEmail(email)) {
+        showFieldError(emailInput, 'Please enter a valid email address');
+        isValid = false;
     }
 
-    if (password.length < AUTH_CONFIG.MIN_PASSWORD_LENGTH) {
-        showToast(`Password must be at least ${AUTH_CONFIG.MIN_PASSWORD_LENGTH} characters long`, 'error');
-        return;
+    if (!password) {
+        showFieldError(passwordInput, 'Password is required');
+        isValid = false;
+    } else if (password.length < AUTH_CONFIG.MIN_PASSWORD_LENGTH) {
+        showFieldError(passwordInput, `Password must be at least ${AUTH_CONFIG.MIN_PASSWORD_LENGTH} characters long`);
+        isValid = false;
+    } else if (checkPasswordStrength(password) <= 2) {
+        showFieldError(passwordInput, 'Password is too weak. Include uppercase, numbers, and special characters.');
+        isValid = false;
     }
 
-    if (password !== confirmPassword) {
-        showToast('Passwords do not match', 'error');
-        return;
+    if (!confirmPassword) {
+        showFieldError(confirmPasswordInput, 'Please confirm your password');
+        isValid = false;
+    } else if (password !== confirmPassword) {
+        showFieldError(confirmPasswordInput, 'Passwords do not match');
+        isValid = false;
     }
 
     if (!termsAccepted) {
-        showToast('Please accept the terms and conditions', 'error');
+        showFieldError(termsInput, 'Please accept the terms and conditions');
+        isValid = false;
+    }
+
+    if (!isValid) {
         return;
     }
 
-    // Check if user already exists
-    const users = getUsersFromStorage();
-    if (users.some(u => u.email === email)) {
-        showToast('An account with this email already exists', 'error');
-        return;
-    }
+    // Show loading state
+    showLoadingState(submitBtn, 'Creating account...');
 
-    // Create new user
-    const newUser = {
-        id: Date.now().toString(),
-        name: fullName,
-        email: email,
-        password: password, // In real app, this should be hashed
-        role: 'customer',
-        createdAt: new Date().toISOString()
-    };
-
-    // Save user
-    users.push(newUser);
-    localStorage.setItem('watchstore_users', JSON.stringify(users));
-
-    // Auto-login after registration
-    storeUser({
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        role: newUser.role
-    });
-
-    showToast('Registration successful! Redirecting...', 'success');
-
+    // Simulate registration with delay for better UX
     setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 1500);
+        try {
+            // Check if user already exists
+            const users = getUsersFromStorage();
+            if (users.some(u => u.email === email)) {
+                showToast('An account with this email already exists', 'error');
+                showFieldError(emailInput, 'Email already registered');
+                hideLoadingState(submitBtn);
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                name: fullName,
+                email: email,
+                password: password, // In real app, this should be hashed
+                role: 'customer',
+                createdAt: new Date().toISOString()
+            };
+
+            // Save user
+            users.push(newUser);
+            localStorage.setItem(AUTH_CONFIG.STORAGE_KEYS.USERS, JSON.stringify(users));
+
+            // Auto-login after registration
+            storeUser({
+                id: newUser.id,
+                name: newUser.name,
+                email: newUser.email,
+                role: newUser.role
+            });
+
+            showToast('Registration successful! Redirecting...', 'success');
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+
+        } catch (error) {
+            console.error('Registration error:', error);
+            showToast('Registration failed. Please try again.', 'error');
+            hideLoadingState(submitBtn);
+        }
+    }, 1000); // Simulate network delay
 }
 
 /**
- * Get users from localStorage
+ * Get users from localStorage with error handling
  */
 function getUsersFromStorage() {
     try {
-        const users = localStorage.getItem('watchstore_users');
+        const users = localStorage.getItem(AUTH_CONFIG.STORAGE_KEYS.USERS);
         return users ? JSON.parse(users) : [];
     } catch (error) {
         console.error('Error parsing users:', error);
@@ -396,6 +637,12 @@ function initializeLoginPage() {
         }
     }
 
+    // Setup password visibility toggle
+    setupPasswordToggle('togglePassword', 'password', 'passwordIcon');
+
+    // Setup real-time validation
+    setupRealtimeValidation();
+
     console.log('✅ Login Page Ready!');
 }
 
@@ -418,6 +665,10 @@ function initializeRegisterPage() {
         });
     }
 
+    // Setup password visibility toggles
+    setupPasswordToggle('togglePassword', 'password', 'passwordIcon');
+    setupPasswordToggle('toggleConfirmPassword', 'confirmPassword', 'confirmPasswordIcon');
+
     // Confirm password validation
     const confirmPasswordInput = document.getElementById('confirmPassword');
     if (confirmPasswordInput) {
@@ -430,6 +681,9 @@ function initializeRegisterPage() {
             }
         });
     }
+
+    // Setup real-time validation
+    setupRealtimeValidation();
 
     console.log('✅ Registration Page Ready!');
 }
@@ -453,8 +707,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export functions for global access
-window.WatchStoreAuth = {
+window.CoffeeHouseAuth = {
     isLoggedIn,
     logout,
-    showToast
+    showToast,
+    sanitizeInput
 };

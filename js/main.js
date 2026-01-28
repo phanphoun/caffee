@@ -1,7 +1,7 @@
 /**
  * ============================================================================
  * CoffeeHouse E-Commerce Website - Main JavaScript
- * Handles cart management, user authentication, and general functionality
+ * Handles cart management, user login, and general features
  * ============================================================================
  */
 
@@ -21,11 +21,250 @@ const CONFIG = {
 };
 
 // ============================================================================
-// APPLICATION STATE (Loaded from localStorage)
+// SECURE STORAGE UTILITIES - Error handling for localStorage operations
 // ============================================================================
 
-let cart = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.CART)) || [];
-let currentUser = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.USER)) || null;
+/**
+ * Safely retrieve data from localStorage with error handling
+ * @param {string} key - The localStorage key
+ * @param {*} defaultValue - Default value if retrieval fails
+ * @returns {*} The parsed data or default value
+ */
+function safeStorageGet(key, defaultValue = null) {
+    try {
+        const item = localStorage.getItem(key);
+        if (item === null) return defaultValue;
+        return JSON.parse(item);
+    } catch (error) {
+        console.error(`Storage error for key ${key}:`, error);
+        showToast('Data loading error. Some features may be limited.', 'warning');
+        return defaultValue;
+    }
+}
+
+/**
+ * Safely save data to localStorage with error handling
+ * @param {string} key - The localStorage key
+ * @param {*} data - The data to save
+ * @returns {boolean} True if successful, false otherwise
+ */
+function safeStorageSet(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        console.error(`Storage save error for key ${key}:`, error);
+        if (error.name === 'QuotaExceededError') {
+            showToast('Storage full. Please clear your browser data.', 'error');
+        } else {
+            showToast('Failed to save data. Please try again.', 'error');
+        }
+        return false;
+    }
+}
+
+/**
+ * Safely remove data from localStorage with error handling
+ * @param {string} key - The localStorage key
+ * @returns {boolean} True if successful, false otherwise
+ */
+function safeStorageRemove(key) {
+    try {
+        localStorage.removeItem(key);
+        return true;
+    } catch (error) {
+        console.error(`Storage remove error for key ${key}:`, error);
+        return false;
+    }
+}
+
+/**
+ * Sanitize user input to prevent XSS attacks
+ * @param {string} input - The user input to sanitize
+ * @returns {string} Sanitized input
+ */
+function sanitizeInput(input) {
+    if (typeof input !== 'string') return '';
+
+    return input.trim()
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/javascript:/gi, '')
+        .replace(/on\w+\s*=/gi, '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/["'<>]/g, '')
+        .substring(0, 500); // Limit length
+}
+
+/**
+ * Validate email format
+ * @param {string} email - The email to validate
+ * @returns {boolean} True if valid, false otherwise
+ */
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+/**
+ * Validate phone number format
+ * @param {string} phone - The phone number to validate
+ * @returns {boolean} True if valid, false otherwise
+ */
+function isValidPhone(phone) {
+    const phoneRegex = /^[\d\s\-\(\)+]+$/;
+    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
+}
+
+/**
+ * Show loading state on a button or element
+ * @param {HTMLElement} element - The element to show loading state on
+ * @param {string} loadingText - Text to display during loading
+ * @param {string} originalContent - Original content to restore
+ */
+function showLoadingState(element, loadingText = 'Loading...', originalContent = null) {
+    if (!element) return;
+
+    // Store original content if not provided
+    if (!originalContent) {
+        element.dataset.originalContent = element.innerHTML;
+    } else {
+        element.dataset.originalContent = originalContent;
+    }
+
+    // Disable element and show loading state
+    element.disabled = true;
+    element.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i>${loadingText}`;
+
+    // Add loading class for styling
+    element.classList.add('loading');
+}
+
+/**
+ * Hide loading state and restore original content
+ * @param {HTMLElement} element - The element to hide loading state from
+ */
+function hideLoadingState(element) {
+    if (!element) return;
+
+    // Restore original content
+    const originalContent = element.dataset.originalContent;
+    if (originalContent) {
+        element.innerHTML = originalContent;
+        delete element.dataset.originalContent;
+    }
+
+    // Re-enable element and remove loading class
+    element.disabled = false;
+    element.classList.remove('loading');
+}
+
+/**
+ * Show loading overlay for async operations
+ * @param {string} message - Loading message to display
+ * @returns {HTMLElement} The loading overlay element
+ */
+function showLoadingOverlay(message = 'Processing...') {
+    const overlay = document.createElement('div');
+    overlay.className = 'loading-overlay';
+    overlay.innerHTML = `
+        <div class="loading-overlay-content">
+            <div class="spinner"></div>
+            <p>${message}</p>
+        </div>
+    `;
+
+    // Add styles
+    Object.assign(overlay.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100%',
+        background: 'rgba(0, 0, 0, 0.7)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: '9999',
+        opacity: '0',
+        transition: 'opacity 0.3s ease'
+    });
+
+    // Style the content
+    const content = overlay.querySelector('.loading-overlay-content');
+    Object.assign(content.style, {
+        background: 'white',
+        padding: '2rem',
+        borderRadius: '10px',
+        textAlign: 'center',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+    });
+
+    // Style the spinner
+    const spinner = overlay.querySelector('.spinner');
+    Object.assign(spinner.style, {
+        width: '40px',
+        height: '40px',
+        border: '4px solid #f3f3f3',
+        borderTop: '4px solid var(--primary-color)',
+        borderRadius: '50%',
+        animation: 'spin 1s linear infinite',
+        margin: '0 auto 1rem'
+    });
+
+    document.body.appendChild(overlay);
+
+    // Fade in
+    setTimeout(() => {
+        overlay.style.opacity = '1';
+    }, 10);
+
+    return overlay;
+}
+
+/**
+ * Hide loading overlay
+ * @param {HTMLElement} overlay - The overlay element to hide
+ */
+function hideLoadingOverlay(overlay) {
+    if (!overlay) return;
+
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+        if (overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+        }
+    }, 300);
+}
+
+/**
+ * Add CSS animation for spinner
+ */
+function addLoadingStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading {
+            opacity: 0.7;
+            cursor: not-allowed !important;
+        }
+        
+        .loading-overlay {
+            backdrop-filter: blur(2px);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// ============================================================================
+// APPLICATION STATE (Loaded from localStorage with error handling)
+// ============================================================================
+
+let cart = safeStorageGet(CONFIG.STORAGE_KEYS.CART, []);
+let currentUser = safeStorageGet(CONFIG.STORAGE_KEYS.USER, null);
 
 // ============================================================================
 // UTILITY FUNCTIONS - Formatting & Notifications
@@ -131,10 +370,15 @@ function updateCartCount() {
 
 /**
  * Save cart to localStorage for persistence across sessions
+ * Uses secure storage with error handling
  */
 function saveCart() {
-    localStorage.setItem(CONFIG.STORAGE_KEYS.CART, JSON.stringify(cart));
+    if (!safeStorageSet(CONFIG.STORAGE_KEYS.CART, cart)) {
+        console.error('Failed to save cart data');
+        return false;
+    }
     updateCartCount();
+    return true;
 }
 
 /**
@@ -167,7 +411,7 @@ function getProductDataFromCard(card) {
 // ============================================================================
 
 /**
- * Add a product to the shopping cart
+ * Add a product to the shopping cart with loading state
  * Updates quantity if product already exists, shows user feedback
  * @param {string} productId - The unique product identifier
  * @param {number} quantity - Number of items to add (default: 1)
@@ -182,29 +426,53 @@ function addToCart(productId, quantity = 1) {
             return;
         }
 
-        const productData = getProductDataFromCard(card);
-
-        // Check if product already exists in cart
-        const existingItem = cart.find(item => item.id === productData.id);
-
-        if (existingItem) {
-            existingItem.qty += quantity;
-            showToast(`${productData.title} quantity updated (${existingItem.qty} in cart)`, 'success');
-        } else {
-            cart.push({
-                ...productData,
-                qty: quantity
-            });
-            showToast(`${productData.title} added to cart!`, 'success');
-        }
-
-        saveCart();
-
-        // Animate button if it exists
         const button = card.querySelector('.btn-add-cart');
+
+        // Show loading state on button
         if (button) {
-            animateButton(button);
+            showLoadingState(button, 'Adding...');
         }
+
+        // Simulate async operation
+        setTimeout(() => {
+            try {
+                const productData = getProductDataFromCard(card);
+
+                // Check if product already exists in cart
+                const existingItem = cart.find(item => item.id === productData.id);
+
+                if (existingItem) {
+                    existingItem.qty += quantity;
+                    showToast(`${productData.title} quantity updated (${existingItem.qty} in cart)`, 'success');
+                } else {
+                    cart.push({
+                        ...productData,
+                        qty: quantity
+                    });
+                    showToast(`${productData.title} added to cart!`, 'success');
+                }
+
+                if (saveCart()) {
+                    // Animate button if it exists
+                    if (button) {
+                        hideLoadingState(button);
+                        animateButton(button);
+                    }
+                } else {
+                    if (button) {
+                        hideLoadingState(button);
+                    }
+                    showToast('Failed to add product to cart', 'error');
+                }
+
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                if (button) {
+                    hideLoadingState(button);
+                }
+                showToast('Failed to add product to cart', 'error');
+            }
+        }, 500); // Simulate network delay
 
     } catch (error) {
         console.error('Error adding to cart:', error);
@@ -274,7 +542,7 @@ function getCartTotal() {
 }
 
 // ============================================================================
-// USER AUTHENTICATION & SESSION
+// USER LOGIN & SESSION
 // ============================================================================
 
 /**
@@ -283,26 +551,53 @@ function getCartTotal() {
  */
 function checkUserSession() {
     const accountName = document.getElementById('accountName');
-    const loginBtn = document.getElementById('loginBtn');
-    const registerBtn = document.getElementById('registerBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
+    const userHeader = document.getElementById('userHeader');
+    const headerUserName = document.getElementById('headerUserName');
+    const headerUserEmail = document.getElementById('headerUserEmail');
+    const loginMenuItem = document.getElementById('loginMenuItem');
+    const registerMenuItem = document.getElementById('registerMenuItem');
+    const profileMenuItem = document.getElementById('profileMenuItem');
+    const ordersMenuItem = document.getElementById('ordersMenuItem');
+    const wishlistMenuItem = document.getElementById('wishlistMenuItem');
+    const settingsMenuItem = document.getElementById('settingsMenuItem');
+    const logoutMenuItem = document.getElementById('logoutMenuItem');
     const divider = document.getElementById('divider');
 
     if (currentUser && accountName) {
         // User is logged in
         accountName.textContent = currentUser.name || currentUser.username || 'User';
 
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (registerBtn) registerBtn.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'block';
+        // Update user header
+        if (userHeader && headerUserName && headerUserEmail) {
+            userHeader.style.display = 'block';
+            headerUserName.textContent = currentUser.name || currentUser.username || 'User';
+            headerUserEmail.textContent = currentUser.email || 'No email';
+        }
+
+        // Show logged-in menu items
+        if (loginMenuItem) loginMenuItem.style.display = 'none';
+        if (registerMenuItem) registerMenuItem.style.display = 'none';
+        if (profileMenuItem) profileMenuItem.style.display = 'block';
+        if (ordersMenuItem) ordersMenuItem.style.display = 'block';
+        if (wishlistMenuItem) wishlistMenuItem.style.display = 'block';
+        if (settingsMenuItem) settingsMenuItem.style.display = 'block';
+        if (logoutMenuItem) logoutMenuItem.style.display = 'block';
         if (divider) divider.style.display = 'block';
     } else {
         // User is not logged in
         if (accountName) accountName.textContent = 'Account';
 
-        if (loginBtn) loginBtn.style.display = 'block';
-        if (registerBtn) registerBtn.style.display = 'block';
-        if (logoutBtn) logoutBtn.style.display = 'none';
+        // Hide user header
+        if (userHeader) userHeader.style.display = 'none';
+
+        // Show logged-out menu items
+        if (loginMenuItem) loginMenuItem.style.display = 'block';
+        if (registerMenuItem) registerMenuItem.style.display = 'block';
+        if (profileMenuItem) profileMenuItem.style.display = 'none';
+        if (ordersMenuItem) ordersMenuItem.style.display = 'none';
+        if (wishlistMenuItem) wishlistMenuItem.style.display = 'none';
+        if (settingsMenuItem) settingsMenuItem.style.display = 'none';
+        if (logoutMenuItem) logoutMenuItem.style.display = 'none';
         if (divider) divider.style.display = 'none';
     }
 }
@@ -310,17 +605,21 @@ function checkUserSession() {
 /**
  * Log out the current user
  * Clears user data, updates UI, and redirects to home page
+ * Uses secure storage operations
  */
 function logout() {
-    localStorage.removeItem(CONFIG.STORAGE_KEYS.USER);
-    currentUser = null;
-    checkUserSession();
-    showToast('Logged out successfully', 'success');
+    if (safeStorageRemove(CONFIG.STORAGE_KEYS.USER)) {
+        currentUser = null;
+        checkUserSession();
+        showToast('Logged out successfully', 'success');
 
-    // Redirect to home after a short delay
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 1000);
+        // Redirect to home after a short delay
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
+    } else {
+        showToast('Error during logout. Please try again.', 'error');
+    }
 }
 
 // ============================================================================
@@ -450,15 +749,41 @@ function loadFeaturedProducts() {
 // =============================================================================
 
 /**
- * Handle newsletter subscription
+ * Handle newsletter sign-up with loading state and input checks
  */
 function handleNewsletterSubmit(event) {
     event.preventDefault();
-    const email = event.target.querySelector('input[type="email"]').value;
+    const emailInput = event.target.querySelector('input[type="email"]');
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const email = sanitizeInput(emailInput.value);
 
-    // Here you would normally send this to your backend
-    showToast('Newsletter subscription successful!', 'success');
-    event.target.reset();
+    // Validate email
+    if (!email) {
+        showToast('Please enter an email address', 'error');
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        showToast('Please enter a valid email address', 'error');
+        return;
+    }
+
+    // Show loading state
+    if (submitBtn) {
+        showLoadingState(submitBtn, 'Subscribing...');
+    }
+
+    // Simulate API call
+    setTimeout(() => {
+        // Here you would normally send this to your backend
+        showToast('Newsletter subscription successful!', 'success');
+
+        // Reset form and hide loading state
+        event.target.reset();
+        if (submitBtn) {
+            hideLoadingState(submitBtn);
+        }
+    }, 1000);
 }
 
 // =============================================================================
@@ -470,6 +795,9 @@ function handleNewsletterSubmit(event) {
  */
 function initializeApp() {
     console.log('🚀 CoffeeHouse Application Initializing...');
+
+    // Add loading styles
+    addLoadingStyles();
 
     // Check user session
     checkUserSession();
@@ -490,7 +818,7 @@ function initializeApp() {
 }
 
 /**
- * Setup all event listeners
+ * Setup all event listeners including keyboard navigation
  */
 function setupEventListeners() {
     // Logout button
@@ -505,7 +833,7 @@ function setupEventListeners() {
         newsletterForm.addEventListener('submit', handleNewsletterSubmit);
     }
 
-    // Cart button functionality
+    // Cart button features
     const cartBtn = document.getElementById('cartBtn');
     if (cartBtn) {
         cartBtn.addEventListener('click', (e) => {
@@ -521,6 +849,22 @@ function setupEventListeners() {
             if (cartDropdown) {
                 cartDropdown.classList.toggle('active');
                 updateCartDropdown();
+
+                // Focus first cart item if dropdown opens
+                if (cartDropdown.classList.contains('active')) {
+                    const firstCartItem = cartDropdown.querySelector('.cart-item');
+                    if (firstCartItem) {
+                        setTimeout(() => firstCartItem.focus(), 100);
+                    }
+                }
+            }
+        });
+
+        // Keyboard support for cart button
+        cartBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                cartBtn.click();
             }
         });
     }
@@ -534,6 +878,42 @@ function setupEventListeners() {
             cartDropdown.classList.remove('active');
         }
     });
+
+    // Keyboard navigation for cart dropdown
+    const cartDropdown = document.getElementById('cartDropdown');
+    if (cartDropdown) {
+        cartDropdown.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                cartDropdown.classList.remove('active');
+                cartBtn.focus();
+            }
+        });
+    }
+
+    // Global keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        // Ctrl/Cmd + K for quick search (if search feature exists)
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            // Future: implement quick search
+        }
+
+        // Alt + C to open cart
+        if (e.altKey && e.key === 'c') {
+            e.preventDefault();
+            if (cartBtn) cartBtn.click();
+        }
+
+        // Alt + P to open profile
+        if (e.altKey && e.key === 'p') {
+            e.preventDefault();
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) loginBtn.click();
+        }
+    });
+
+    // Skip to main content link for accessibility
+    addSkipToMainLink();
 }
 
 /**
@@ -561,7 +941,51 @@ function addScrollAnimations() {
 }
 
 /**
- * Update cart dropdown
+ * Add skip to main content link for accessibility
+ */
+function addSkipToMainLink() {
+    const skipLink = document.createElement('a');
+    skipLink.href = '#main-content';
+    skipLink.className = 'skip-to-main';
+    skipLink.textContent = 'Skip to main content';
+    skipLink.setAttribute('aria-label', 'Skip to main content');
+
+    // Add styles for skip link
+    Object.assign(skipLink.style, {
+        position: 'absolute',
+        top: '-40px',
+        left: '6px',
+        background: 'var(--primary-color)',
+        color: 'white',
+        padding: '8px',
+        textDecoration: 'none',
+        borderRadius: '4px',
+        zIndex: '10000',
+        fontSize: '14px',
+        fontWeight: 'bold'
+    });
+
+    // Show on focus
+    skipLink.addEventListener('focus', () => {
+        skipLink.style.top = '6px';
+    });
+
+    skipLink.addEventListener('blur', () => {
+        skipLink.style.top = '-40px';
+    });
+
+    // Insert at beginning of body
+    document.body.insertBefore(skipLink, document.body.firstChild);
+
+    // Add main content id to hero section
+    const heroSection = document.querySelector('.hero-section');
+    if (heroSection) {
+        heroSection.id = 'main-content';
+    }
+}
+
+/**
+ * Update cart dropdown with accessibility improvements
  */
 function updateCartDropdown() {
     const cartItems = document.getElementById('cartItems');
@@ -571,28 +995,32 @@ function updateCartDropdown() {
 
     if (cart.length === 0) {
         cartItems.innerHTML = `
-            <div class="text-center py-4">
-                <i class="bi bi-cart-x fa-2x text-muted mb-2"></i>
+            <div class="text-center py-4" role="status" aria-live="polite">
+                <i class="bi bi-cart-x fa-2x text-muted mb-2" aria-hidden="true"></i>
                 <p class="text-muted">Your cart is empty</p>
             </div>
         `;
         cartTotal.textContent = '$0.00';
     } else {
-        cartItems.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <img src="${item.image}" alt="${item.title}">
+        cartItems.innerHTML = cart.map((item, index) => `
+            <div class="cart-item" role="listitem" tabindex="0" 
+                 aria-label="${item.title}, quantity ${item.qty}, price ${CoffeeHouse.formatCurrency(item.price * item.qty)}">
+                <img src="${item.image}" alt="${sanitizeInput(item.title)}" aria-hidden="true">
                 <div class="cart-item-info">
-                    <div class="cart-item-title">${item.title}</div>
+                    <div class="cart-item-title">${sanitizeInput(item.title)}</div>
                     <div class="cart-item-price">${CoffeeHouse.formatCurrency(item.price)} each</div>
-                    <div class="cart-item-quantity">
-                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty - 1})" title="Decrease quantity">−</button>
-                        <span class="qty-display">${item.qty}</span>
-                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty + 1})" title="Increase quantity">+</button>
+                    <div class="cart-item-quantity" role="group" aria-label="Quantity controls">
+                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty - 1})" 
+                                title="Decrease quantity" aria-label="Decrease quantity for ${sanitizeInput(item.title)}">−</button>
+                        <span class="qty-display" aria-label="Current quantity: ${item.qty}">${item.qty}</span>
+                        <button class="quantity-btn" onclick="CoffeeHouse.updateCartQuantity('${item.id}', ${item.qty + 1})" 
+                                title="Increase quantity" aria-label="Increase quantity for ${sanitizeInput(item.title)}">+</button>
                     </div>
                     <div class="cart-item-subtotal">Subtotal: <strong>${CoffeeHouse.formatCurrency(item.price * item.qty)}</strong></div>
                 </div>
-                <button class="btn-remove-item" onclick="CoffeeHouse.removeFromCart('${item.id}')" title="Remove from cart">
-                    <i class="bi bi-trash"></i>
+                <button class="btn-remove-item" onclick="CoffeeHouse.removeFromCart('${item.id}')" 
+                        title="Remove from cart" aria-label="Remove ${sanitizeInput(item.title)} from cart">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
                 </button>
             </div>
         `).join('');
@@ -604,13 +1032,47 @@ function updateCartDropdown() {
         if (cart.length > 0) {
             cartItems.innerHTML += `
                 <div class="text-center mt-3 pt-3 border-top">
-                    <a href="checkout.html" class="btn btn-primary w-100">
-                        <i class="fas fa-lock me-2"></i>Proceed to Checkout
+                    <a href="checkout.html" class="btn btn-primary w-100" 
+                       aria-label="Proceed to checkout with ${cart.length} items">
+                        <i class="fas fa-lock me-2" aria-hidden="true"></i>Proceed to Checkout
                     </a>
                 </div>
             `;
         }
+
+        // Add keyboard navigation to cart items
+        setupCartItemKeyboardNavigation();
     }
+}
+
+/**
+ * Setup keyboard navigation for cart items
+ */
+function setupCartItemKeyboardNavigation() {
+    const cartItems = document.querySelectorAll('.cart-item[tabindex="0"]');
+
+    cartItems.forEach((item, index) => {
+        item.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    const nextItem = cartItems[index + 1];
+                    if (nextItem) nextItem.focus();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    const prevItem = cartItems[index - 1];
+                    if (prevItem) prevItem.focus();
+                    break;
+                case 'Delete':
+                case 'Backspace':
+                    e.preventDefault();
+                    const removeBtn = item.querySelector('.btn-remove-item');
+                    if (removeBtn) removeBtn.click();
+                    break;
+            }
+        });
+    });
 }
 
 // =============================================================================
@@ -627,7 +1089,9 @@ window.CoffeeHouse = {
     updateCartQuantity,
     getCartTotal,
     showToast,
-    formatCurrency
+    formatCurrency,
+    checkUserSession,
+    updateAccountDropdown
 };
 
 
